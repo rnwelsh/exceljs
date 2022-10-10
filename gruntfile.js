@@ -45,24 +45,24 @@ module.exports = function(grunt) {
           standalone: 'ExcelJS',
         },
       },
-      bare: {
-        // keep the original source for source maps
-        src: ['./lib/exceljs.bare.js'],
-        dest: './dist/exceljs.bare.js',
-      },
+      // bare: {
+      //   // keep the original source for source maps
+      //   src: ['./lib/exceljs.bare.js'],
+      //   dest: './dist/exceljs.bare.js',
+      // },
       bundle: {
         // keep the original source for source maps
         src: ['./lib/exceljs.browser.js'],
         dest: './dist/exceljs.js',
       },
-      spec: {
-        options: {
-          transform: null,
-          browserifyOptions: null,
-        },
-        src: ['./build/spec/browser/exceljs.spec.js'],
-        dest: './build/web/exceljs.spec.js',
-      },
+      // spec: {
+      //   options: {
+      //     transform: null,
+      //     browserifyOptions: null,
+      //   },
+      //   src: ['./build/spec/browser/exceljs.spec.js'],
+      //   dest: './build/web/exceljs.spec.js',
+      // },
     },
 
     terser: {
@@ -85,19 +85,19 @@ module.exports = function(grunt) {
           './dist/exceljs.min.js': ['./dist/exceljs.js'],
         },
       },
-      bare: {
-        options: {
-          // Keep the original source maps from browserify
-          // See also https://www.npmjs.com/package/terser#source-map-options
-          sourceMap: {
-            content: 'inline',
-            url: 'exceljs.bare.min.js.map',
-          },
-        },
-        files: {
-          './dist/exceljs.bare.min.js': ['./dist/exceljs.bare.js'],
-        },
-      },
+      // bare: {
+      //   options: {
+      //     // Keep the original source maps from browserify
+      //     // See also https://www.npmjs.com/package/terser#source-map-options
+      //     sourceMap: {
+      //       content: 'inline',
+      //       url: 'exceljs.bare.min.js.map',
+      //     },
+      //   },
+      //   files: {
+      //     './dist/exceljs.bare.min.js': ['./dist/exceljs.bare.js'],
+      //   },
+      // },
     },
 
     // Move source maps to a separate file
@@ -106,7 +106,7 @@ module.exports = function(grunt) {
         options: {},
         files: {
           './dist/exceljs.js.map': ['./dist/exceljs.js'],
-          './dist/exceljs.bare.js.map': ['./dist/exceljs.bare.js'],
+          // './dist/exceljs.bare.js.map': ['./dist/exceljs.bare.js'],
         },
       },
     },
@@ -114,27 +114,28 @@ module.exports = function(grunt) {
     copy: {
       dist: {
         files: [
-          {expand: true, src: ['**'], cwd: './build/lib', dest: './dist/es5'},
-          {src: './build/lib/exceljs.nodejs.js', dest: './dist/es5/index.js'},
+          {expand: true, src: ['**'], cwd: './build/lib', dest: './dist/es6'},
+          {src: './build/lib/exceljs.nodejs.js', dest: './dist/es6/index.js'},
           {src: './LICENSE', dest: './dist/LICENSE'},
         ],
       },
     },
 
-    jasmine: {
-      options: {
-        version: '3.8.0',
-        noSandbox: true,
-      },
-      dev: {
-        src: ['./dist/exceljs.js'],
-        options: {
-          specs: './build/web/exceljs.spec.js',
-        },
-      },
-    },
+    // jasmine: {
+    //   options: {
+    //     version: '3.8.0',
+    //     noSandbox: true,
+    //   },
+    //   dev: {
+    //     src: ['./dist/exceljs.js'],
+    //     options: {
+    //       specs: './build/web/exceljs.spec.js',
+    //     },
+    //   },
+    // },
   });
 
   grunt.registerTask('build', ['babel:dist', 'browserify', 'terser', 'exorcise', 'copy']);
+  // grunt.registerTask('build', ['babel:dist', 'browserify', 'terser', 'exorcise', 'copy']);
   grunt.registerTask('ug', ['terser']);
 };
