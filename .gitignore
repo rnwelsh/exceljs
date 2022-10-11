@@ -10,7 +10,8 @@ pids
 # Generated files
 dist/*
 build/*
-
+release/dev/*
+release/dist/*
 # Test Output Folder
 out/*
 spec/out/*
