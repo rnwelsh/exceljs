@@ -1,0 +1,11 @@
+export function each(obj: any, cb: any): void;
+export function some(obj: any, cb: any): boolean;
+export function every(obj: any, cb: any): boolean;
+export function map(obj: any, cb: any): any[];
+export function keyBy(a: any, p: any): any;
+export function isEqual(a: any, b: any): any;
+export function escapeHtml(html: any): any;
+export function strcmp(a: any, b: any): 1 | -1 | 0;
+export function isUndefined(val: any): boolean;
+export function isObject(val: any): boolean;
+export function deepMerge(...args: any[]): any;

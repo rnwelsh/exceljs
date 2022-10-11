@@ -1,12 +1,23 @@
 {
   "compilerOptions": {
-    "module": "es6",
-    "target": "es6",
-    "sourceMap": true,
-    "types": [
-      "node"
-    ]
+    "target": "es2020",
+    "lib": ["es5","es6","es2020",],
+    "module": "es2020",
+    "moduleResolution": "node16",
+    "declaration": true,
+    "declarationDir": "./release/dist",
+    "emitDeclarationOnly": true,
+    "allowJs": true,
+    "checkJs": false,
+    "maxNodeModuleJsDepth": 0,
+    "typeRoots": [
+      "./libesm/**/*"
+    ],
+    "types": ["node",]
   },
+  "include": [
+    "./libesm/**/*"
+  ],
   "exclude": [
     "node_modules"
   ]

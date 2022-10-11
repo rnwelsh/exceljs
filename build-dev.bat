@@ -1,0 +1,1 @@
+esbuild ./libesm/exceljs.js --bundle --platform=node --target=node16 --format=esm --outdir=./release/dev/  --color=true

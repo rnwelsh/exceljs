@@ -1,5 +1,6 @@
 {
   "name": "exceljs",
+  "type": "module",
   "version": "4.3.0",
   "description": "Excel Workbook Manager - Read and Write xlsx and csv Files.",
   "private": false,
@@ -16,7 +17,6 @@
     "node": ">=8.3.0"
   },
   "main": "./excel.js",
-  "browser": "./dist/exceljs.min.js",
   "types": "./index.d.ts",
   "files": [
     "dist",
@@ -57,6 +57,7 @@
     "install-build": "npm install && grunt build",
     "preversion": "npm run clean && npm run build && npm run test:version",
     "postversion": "git push --no-verify && git push --tags --no-verify"
+
   },
   "husky": {
     "hooks": {
@@ -70,31 +71,6 @@
       "git add"
     ]
   },
-  "keywords": [
-    "xlsx",
-    "json",
-    "csv",
-    "excel",
-    "font",
-    "border",
-    "fill",
-    "number",
-    "format",
-    "number format",
-    "alignment",
-    "office",
-    "spreadsheet",
-    "workbook",
-    "defined names",
-    "data validations",
-    "rich text",
-    "in-cell format",
-    "outlineLevel",
-    "views",
-    "frozen",
-    "split",
-    "pageSetup"
-  ],
   "dependencies": {
     "archiver": "^5.0.0",
     "dayjs": "^1.8.34",
@@ -110,6 +86,7 @@
     "@babel/cli": "^7.10.5",
     "@babel/core": "^7.11.4",
     "@babel/preset-env": "^7.11.0",
+    "@types/archiver": "^5.3.1",
     "@types/chai": "^4.2.12",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.11.2",

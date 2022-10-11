@@ -1,0 +1,32 @@
+export default colCache;
+declare namespace colCache {
+    const _dictionary: string[];
+    const _l2nFill: number;
+    const _l2n: {};
+    const _n2l: any[];
+    function _level(n: any): 1 | 2 | 3;
+    function _level(n: any): 1 | 2 | 3;
+    function _fill(level: any): void;
+    function _fill(level: any): void;
+    function l2n(l: any): any;
+    function l2n(l: any): any;
+    function n2l(n: any): any;
+    function n2l(n: any): any;
+    const _hash: {};
+    function validateAddress(value: any): boolean;
+    function validateAddress(value: any): boolean;
+    function decodeAddress(value: any): any;
+    function decodeAddress(value: any): any;
+    function getAddress(r: any, c: any): any;
+    function getAddress(r: any, c: any): any;
+    function decode(value: any): any;
+    function decode(value: any): any;
+    function decodeEx(value: any): any;
+    function decodeEx(value: any): any;
+    function encodeAddress(row: any, col: any): any;
+    function encodeAddress(row: any, col: any): any;
+    function encode(...args: any[]): any;
+    function encode(...args: any[]): any;
+    function inRange(range: any, address: any): boolean;
+    function inRange(range: any, address: any): boolean;
+}
