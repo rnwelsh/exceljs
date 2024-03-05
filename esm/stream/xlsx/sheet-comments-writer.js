@@ -1,9 +1,9 @@
 import XmlStream from "../../utils/xml-stream.js";
 import RelType from "../../xlsx/rel-type.js";
-import colCache from "../../utils/col-cache.js";
+import {decodeAddress} from "../../utils/col-cache.js";
 import CommentXform from "../../xlsx/xform/comment/comment-xform.js";
 import VmlShapeXform from "../../xlsx/xform/comment/vml-shape-xform.js";
-class SheetCommentsWriter {
+export default class SheetCommentsWriter {
     constructor(worksheet, sheetRelsWriter, options) {
         // in a workbook, each sheet will have a number
         this.id = options.id;
@@ -83,7 +83,7 @@ class SheetCommentsWriter {
                 this.startedData = true;
             }
             comments.forEach(item => {
-                item.refAddress = colCache.decodeAddress(item.ref);
+                item.refAddress = decodeAddress(item.ref);
             });
             comments.forEach(comment => {
                 this._writeComment(comment, this.count);
@@ -99,4 +99,4 @@ class SheetCommentsWriter {
         }
     }
 }
-export default SheetCommentsWriter;
+

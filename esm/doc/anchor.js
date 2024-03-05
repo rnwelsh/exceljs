@@ -1,4 +1,4 @@
-import colCache from "../utils/col-cache.js";
+import {decodeAddress} from "../utils/col-cache.js";
 'use strict';
 class Anchor {
     constructor(worksheet, address, offset = 0) {
@@ -10,7 +10,7 @@ class Anchor {
             this.nativeRowOff = 0;
         }
         else if (typeof address === 'string') {
-            const decoded = colCache.decodeAddress(address);
+            const decoded = decodeAddress(address);
             this.nativeCol = decoded.col + offset;
             this.nativeColOff = 0;
             this.nativeRow = decoded.row + offset;

@@ -1,6 +1,5 @@
 import { some } from "../utils/under-dash.js";
-import Enums from "./enums.js";
-import colCache from "../utils/col-cache.js";
+import {encodeAddress,decodeAddress,l2n} from "../utils/col-cache.js";
 import Cell from "./cell.js";
 'use strict';
 class Row {
@@ -51,12 +50,12 @@ class Row {
                 col = column.number;
             }
             else {
-                col = colCache.l2n(col);
+                col = l2n(col);
             }
         }
         return (this._cells[col - 1] ||
             this.getCellEx({
-                address: colCache.encodeAddress(this._number, col),
+                address: encodeAddress(this._number, col),
                 row: this._number,
                 col,
             }));
@@ -128,7 +127,7 @@ class Row {
         }
         else {
             this._cells.forEach((cell, index) => {
-                if (cell && cell.type !== Enums.ValueType.Null) {
+                if (cell && cell.type !== 0) {
                     iteratee(cell, index + 1);
                 }
             });
@@ -153,7 +152,7 @@ class Row {
     get values() {
         const values = [];
         this._cells.forEach(cell => {
-            if (cell && cell.type !== Enums.ValueType.Null) {
+            if (cell && cell.type !== 0) {
                 values[cell.col] = cell.value;
             }
         });
@@ -175,7 +174,7 @@ class Row {
             value.forEach((item, index) => {
                 if (item !== undefined) {
                     this.getCellEx({
-                        address: colCache.encodeAddress(this._number, index + offset),
+                        address: encodeAddress(this._number, index + offset),
                         row: this._number,
                         col: index + offset,
                     }).value = item;
@@ -187,7 +186,7 @@ class Row {
             this._worksheet.eachColumnKey((column, key) => {
                 if (value[key] !== undefined) {
                     this.getCellEx({
-                        address: colCache.encodeAddress(this._number, column.number),
+                        address: encodeAddress(this._number, column.number),
                         row: this._number,
                         col: column.number,
                     }).value = value[key];
@@ -197,7 +196,7 @@ class Row {
     }
     // returns true if the row includes at least one cell with a value
     get hasValues() {
-        return some(this._cells, cell => cell && cell.type !== Enums.ValueType.Null);
+        return some(this._cells, cell => cell && cell.type !== 0);
     }
     get cellCount() {
         return this._cells.length;
@@ -214,7 +213,7 @@ class Row {
         let min = 0;
         let max = 0;
         this._cells.forEach(cell => {
-            if (cell && cell.type !== Enums.ValueType.Null) {
+            if (cell && cell.type !== 0) {
                 if (!min || min > cell.col) {
                     min = cell.col;
                 }
@@ -339,7 +338,7 @@ class Row {
                 default: {
                     let address;
                     if (cellModel.address) {
-                        address = colCache.decodeAddress(cellModel.address);
+                        address = decodeAddress(cellModel.address);
                     }
                     else if (previousAddress) {
                         // This is a <c> element without an r attribute
@@ -349,8 +348,8 @@ class Row {
                         address = {
                             row,
                             col,
-                            address: colCache.encodeAddress(row, col),
-                            $col$row: `$${colCache.n2l(col)}$${row}`,
+                            address: encodeAddress(row, col),
+                            $col$row: `$${n2l(col)}$${row}`,
                         };
                     }
                     previousAddress = address;

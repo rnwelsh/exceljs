@@ -1,4 +1,4 @@
-import Enums from "../../../doc/enums.js";
+import {ValueType} from "../../../doc/enums.js";
 import XmlStream from "../../../utils/xml-stream.js";
 import BaseXform from "../base-xform.js";
 import StaticXform from "../static-xform.js";
@@ -14,7 +14,7 @@ const NUMFMT_BASE = 164;
 // =============================================================================
 // StylesXform is used to generate and parse the styles.xml file
 // it manages the collections of fonts, number formats, alignments, etc
-class StylesXform extends BaseXform {
+export default class StylesXform extends BaseXform {
     constructor(initialise) {
         super();
         this.map = {
@@ -213,16 +213,16 @@ class StylesXform extends BaseXform {
             return this.weakMap.get(model);
         }
         const style = {};
-        cellType = cellType || Enums.ValueType.Number;
+        cellType = cellType || ValueType.Number;
         if (model.numFmt) {
             style.numFmtId = this._addNumFmtStr(model.numFmt);
         }
         else {
             switch (cellType) {
-                case Enums.ValueType.Number:
+                case ValueType.Number:
                     style.numFmtId = this._addNumFmtStr('General');
                     break;
-                case Enums.ValueType.Date:
+                case ValueType.Date:
                     style.numFmtId = this._addNumFmtStr('mm-dd-yy');
                     break;
                 default:
@@ -365,95 +365,95 @@ class StylesXform extends BaseXform {
         }
         return index;
     }
-}
-StylesXform.STYLESHEET_ATTRIBUTES = {
-    xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-    'xmlns:mc': 'http://schemas.openxmlformats.org/markup-compatibility/2006',
-    'mc:Ignorable': 'x14ac x16r2',
-    'xmlns:x14ac': 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
-    'xmlns:x16r2': 'http://schemas.microsoft.com/office/spreadsheetml/2015/02/main',
-};
-StylesXform.STATIC_XFORMS = {
-    cellStyles: new StaticXform({
-        tag: 'cellStyles',
-        $: { count: 1 },
-        c: [{ tag: 'cellStyle', $: { name: 'Normal', xfId: 0, builtinId: 0 } }],
-    }),
-    dxfs: new StaticXform({ tag: 'dxfs', $: { count: 0 } }),
-    tableStyles: new StaticXform({
-        tag: 'tableStyles',
-        $: { count: 0, defaultTableStyle: 'TableStyleMedium2', defaultPivotStyle: 'PivotStyleLight16' },
-    }),
-    extLst: new StaticXform({
-        tag: 'extLst',
-        c: [
-            {
-                tag: 'ext',
-                $: {
-                    uri: '{EB79DEF2-80B8-43e5-95BD-54CBDDF9020C}',
-                    'xmlns:x14': 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/main',
+    static STYLESHEET_ATTRIBUTES= {
+        xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+        'xmlns:mc': 'http://schemas.openxmlformats.org/markup-compatibility/2006',
+        'mc:Ignorable': 'x14ac x16r2',
+        'xmlns:x14ac': 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
+        'xmlns:x16r2': 'http://schemas.microsoft.com/office/spreadsheetml/2015/02/main',
+    }
+    static STATIC_XFORMS= {
+        cellStyles: new StaticXform({
+            tag: 'cellStyles',
+            $: { count: 1 },
+            c: [{ tag: 'cellStyle', $: { name: 'Normal', xfId: 0, builtinId: 0 } }],
+        }),
+        dxfs: new StaticXform({ tag: 'dxfs', $: { count: 0 } }),
+        tableStyles: new StaticXform({
+            tag: 'tableStyles',
+            $: { count: 0, defaultTableStyle: 'TableStyleMedium2', defaultPivotStyle: 'PivotStyleLight16' },
+        }),
+        extLst: new StaticXform({
+            tag: 'extLst',
+            c: [
+                {
+                    tag: 'ext',
+                    $: {
+                        uri: '{EB79DEF2-80B8-43e5-95BD-54CBDDF9020C}',
+                        'xmlns:x14': 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/main',
+                    },
+                    c: [{ tag: 'x14:slicerStyles', $: { defaultSlicerStyle: 'SlicerStyleLight1' } }],
                 },
-                c: [{ tag: 'x14:slicerStyles', $: { defaultSlicerStyle: 'SlicerStyleLight1' } }],
-            },
-            {
-                tag: 'ext',
-                $: {
-                    uri: '{9260A510-F301-46a8-8635-F512D64BE5F5}',
-                    'xmlns:x15': 'http://schemas.microsoft.com/office/spreadsheetml/2010/11/main',
+                {
+                    tag: 'ext',
+                    $: {
+                        uri: '{9260A510-F301-46a8-8635-F512D64BE5F5}',
+                        'xmlns:x15': 'http://schemas.microsoft.com/office/spreadsheetml/2010/11/main',
+                    },
+                    c: [{ tag: 'x15:timelineStyles', $: { defaultTimelineStyle: 'TimeSlicerStyleLight1' } }],
                 },
-                c: [{ tag: 'x15:timelineStyles', $: { defaultTimelineStyle: 'TimeSlicerStyleLight1' } }],
-            },
-        ],
-    }),
-};
-// the stylemanager mock acts like StyleManager except that it always returns 0 or {}
-class StylesXformMock extends StylesXform {
-    constructor() {
-        super();
-        this.model = {
-            styles: [{ numFmtId: 0, fontId: 0, fillId: 0, borderId: 0, xfId: 0 }],
-            numFmts: [],
-            fonts: [{ size: 11, color: { theme: 1 }, name: 'Calibri', family: 2, scheme: 'minor' }],
-            borders: [{}],
-            fills: [
-                { type: 'pattern', pattern: 'none' },
-                { type: 'pattern', pattern: 'gray125' },
             ],
-        };
-    }
-    // =========================================================================
-    // Style Manager Interface
-    // override normal behaviour - consume and dispose
-    parseStream(stream) {
-        stream.autodrain();
-        return Promise.resolve();
-    }
-    // add a cell's style model to the collection
-    // each style property is processed and cross-referenced, etc.
-    // the styleId is returned. Note: cellType is used when numFmt not defined
-    addStyleModel(model, cellType) {
-        switch (cellType) {
-            case Enums.ValueType.Date:
-                return this.dateStyleId;
-            default:
-                return 0;
-        }
-    }
-    get dateStyleId() {
-        if (!this._dateStyleId) {
-            const dateStyle = {
-                numFmtId: NumFmtXform.getDefaultFmtId('mm-dd-yy'),
-            };
-            this._dateStyleId = this.model.styles.length;
-            this.model.styles.push(dateStyle);
-        }
-        return this._dateStyleId;
-    }
-    // given a styleId (i.e. s="n"), get the cell's style model
-    // objects are shared where possible.
-    getStyleModel( /* id */) {
-        return {};
+        }),
     }
 }
-StylesXform.Mock = StylesXformMock;
-export default StylesXform;
+// the stylemanager mock acts like StyleManager except that it always returns 0 or {}
+// class StylesXformMock extends StylesXform {
+//     constructor() {
+//         super();
+//         this.model = {
+//             styles: [{ numFmtId: 0, fontId: 0, fillId: 0, borderId: 0, xfId: 0 }],
+//             numFmts: [],
+//             fonts: [{ size: 11, color: { theme: 1 }, name: 'Calibri', family: 2, scheme: 'minor' }],
+//             borders: [{}],
+//             fills: [
+//                 { type: 'pattern', pattern: 'none' },
+//                 { type: 'pattern', pattern: 'gray125' },
+//             ],
+//         };
+//     }
+//     // =========================================================================
+//     // Style Manager Interface
+//     // override normal behaviour - consume and dispose
+//     parseStream(stream) {
+//         stream.autodrain();
+//         return Promise.resolve();
+//     }
+//     // add a cell's style model to the collection
+//     // each style property is processed and cross-referenced, etc.
+//     // the styleId is returned. Note: cellType is used when numFmt not defined
+//     addStyleModel(model, cellType) {
+//         switch (cellType) {
+//             case ValueType.Date:
+//                 return this.dateStyleId;
+//             default:
+//                 return 0;
+//         }
+//     }
+//     get dateStyleId() {
+//         if (!this._dateStyleId) {
+//             const dateStyle = {
+//                 numFmtId: NumFmtXform.getDefaultFmtId('mm-dd-yy'),
+//             };
+//             this._dateStyleId = this.model.styles.length;
+//             this.model.styles.push(dateStyle);
+//         }
+//         return this._dateStyleId;
+//     }
+//     // given a styleId (i.e. s="n"), get the cell's style model
+//     // objects are shared where possible.
+//     getStyleModel( /* id */) {
+//         return {};
+//     }
+// }
+// StylesXform.Mock = StylesXformMock;
+

@@ -1,4 +1,4 @@
-import _ from "../../../utils/under-dash.js";
+import {some} from "../../../utils/under-dash.js";
 import BaseXform from "../base-xform.js";
 class PageMarginsXform extends BaseXform {
     get tag() {
@@ -14,7 +14,7 @@ class PageMarginsXform extends BaseXform {
                 header: model.header,
                 footer: model.footer,
             };
-            if (_.some(attributes, value => value !== undefined)) {
+            if (some(attributes, value => value !== undefined)) {
                 xmlStream.leafNode(this.tag, attributes);
             }
         }

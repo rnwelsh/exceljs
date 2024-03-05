@@ -1,5 +1,4 @@
-import JSZip from "jszip";
-import { PassThrough } from "node:stream";
+// import { PassThrough } from "node:stream";
 // import ZipStream from "../utils/zip-stream.js";
 import StreamBuf from "../utils/stream-buf.js";
 // import {} from "../utils/utils.js";
@@ -10,16 +9,16 @@ import CoreXform from "./xform/core/core-xform.js";
 import SharedStringsXform from "./xform/strings/shared-strings-xform.js";
 import RelationshipsXform from "./xform/core/relationships-xform.js";
 import ContentTypesXform from "./xform/core/content-types-xform.js";
-import AppXform from "./xform/core/app-xform.js";
+// import AppXform from "./xform/core/app-xform.js";
 import WorkbookXform from "./xform/book/workbook-xform.js";
 import WorksheetXform from "./xform/sheet/worksheet-xform.js";
-import DrawingXform from "./xform/drawing/drawing-xform.js";
+// import DrawingXform from "./xform/drawing/drawing-xform.js";
 import TableXform from "./xform/table/table-xform.js";
-import PivotCacheRecordsXform from "./xform/pivot-table/pivot-cache-records-xform.js";
-import PivotCacheDefinitionXform from "./xform/pivot-table/pivot-cache-definition-xform.js";
-import PivotTableXform from "./xform/pivot-table/pivot-table-xform.js";
-import CommentsXform from "./xform/comment/comments-xform.js";
-import VmlNotesXform from "./xform/comment/vml-notes-xform.js";
+// import PivotCacheRecordsXform from "./xform/pivot-table/pivot-cache-records-xform.js";
+// import PivotCacheDefinitionXform from "./xform/pivot-table/pivot-cache-definition-xform.js";
+// import PivotTableXform from "./xform/pivot-table/pivot-table-xform.js";
+// import CommentsXform from "./xform/comment/comments-xform.js";
+// import VmlNotesXform from "./xform/comment/vml-notes-xform.js";
 import theme1Xml from "./xml/theme1.js";
 import RelType from './rel-type.js';
 // function fsReadFileAsync(filename, options) {
@@ -33,7 +32,8 @@ import RelType from './rel-type.js';
 //     });
 //   });
 // }
-export default class {
+
+export default class XLSX {
     constructor(workbook) {
         this.workbook = workbook;
     }
@@ -67,10 +67,17 @@ export default class {
         const xform = new SharedStringsXform();
         return xform.parseStream(stream);
     }
+    static DrawingXform;
+    static loadDrawingXform() {
+      if(!(typeof XLSX.DrawingXform === 'undefined')) return
+      XLSX.DrawingXform = (async()=>(await import("./xform/drawing/drawing-xform.js")).default)(); //   new DrawingXform();
+
+    }
     reconcile(model, options) {
+        XLSX.loadDrawingXform();
         const workbookXform = new WorkbookXform();
         const worksheetXform = new WorksheetXform(options);
-        const drawingXform = new DrawingXform();
+        const drawingXform = new XLSX.DrawingXform();
         const tableXform = new TableXform();
         workbookXform.reconcile(model);
         // reconcile drawings with their rels
@@ -138,8 +145,15 @@ export default class {
         model.worksheetHash[path] = worksheet;
         model.worksheets.push(worksheet);
     }
+    static CommentsXform;
+    
+    static async loadCommentsForm() {
+      if(!(typeof XLSX.CommentsXform === 'undefined')) return
+      XLSX.CommentsXform = (await import("./xform/comment/comments-xform.js")).default;
+    }
     async _processCommentEntry(stream, model, name) {
-        const xform = new CommentsXform();
+        await XLSX.loadCommentsForm();
+        const xform = new XLSX.CommentsXform();
         const comments = await xform.parseStream(stream);
         model.comments[`../${name}.xml`] = comments;
     }
@@ -181,7 +195,8 @@ export default class {
         }
     }
     async _processDrawingEntry(entry, model, name) {
-        const xform = new DrawingXform();
+        XLSX.loadDrawingXform();
+        const xform = new XLSX.DrawingXform();
         const drawing = await xform.parseStream(entry);
         model.drawings[name] = drawing;
     }
@@ -190,8 +205,14 @@ export default class {
         const relationships = await xform.parseStream(entry);
         model.drawingRels[name] = relationships;
     }
+    static vmlNotesXform;
+    static async loadVml() {
+      if(!(typeof XLSX.vmlNotesXform === 'undefined')) return
+      XLSX.vmlNotesXform = await import("./xform/comment/vml-notes-xform.js");
+    }
     async _processVmlDrawingEntry(entry, model, name) {
-        const xform = new VmlNotesXform();
+        await XLSX.loadVml();
+        const xform = new XLSX.VmlNotesXform();
         const vmlDrawing = await xform.parseStream(entry);
         model.vmlDrawings[`../drawings/${name}.vml`] = vmlDrawing;
     }
@@ -226,156 +247,156 @@ export default class {
     //     }
     //     return this.load(Buffer.concat(chunks), options);
     // }
-    async load(data, options) {
-        let buffer;
-        if (options && options.base64) {
-            buffer = Buffer.from(data.toString(), 'base64');
-        }
-        else {
-            buffer = data;
-        }
-        const model = {
-            worksheets: [],
-            worksheetHash: {},
-            worksheetRels: [],
-            themes: {},
-            media: [],
-            mediaIndex: {},
-            drawings: {},
-            drawingRels: {},
-            comments: {},
-            tables: {},
-            vmlDrawings: {},
-        };
-        const zip = await JSZip.loadAsync(buffer);
-        for (const entry of Object.values(zip.files)) {
-            /* eslint-disable no-await-in-loop */
-            if (!entry.dir) {
-                let entryName = entry.name;
-                if (entryName[0] === '/') {
-                    entryName = entryName.substr(1);
-                }
-                let stream;
-                if (entryName.match(/xl\/media\//) ||
-                    // themes are not parsed as stream
-                    entryName.match(/xl\/theme\/([a-zA-Z0-9]+)[.]xml/)) {
-                    stream = new PassThrough();
-                    stream.write(await entry.async('nodebuffer'));
-                }
-                else {
-                    // use object mode to avoid buffer-string convention
-                    stream = new PassThrough({
-                        writableObjectMode: true,
-                        readableObjectMode: true,
-                    });
-                    let content;
-                    // https://www.npmjs.com/package/process
-                    // if (process.browser) {
-                    //     // running in browser, use TextDecoder if possible
-                    //     content = bufferToString(await entry.async('nodebuffer'));
-                    // }
-                    // else {
-                    // running in node.js
-                    content = await entry.async('string');
-                    // }
-                    const chunkSize = 16 * 1024;
-                    for (let i = 0; i < content.length; i += chunkSize) {
-                        stream.write(content.substring(i, i + chunkSize));
-                    }
-                }
-                stream.end();
-                switch (entryName) {
-                    case '_rels/.rels':
-                        model.globalRels = await this.parseRels(stream);
-                        break;
-                    case 'xl/workbook.xml': {
-                        const workbook = await this.parseWorkbook(stream);
-                        model.sheets = workbook.sheets;
-                        model.definedNames = workbook.definedNames;
-                        model.views = workbook.views;
-                        model.properties = workbook.properties;
-                        model.calcProperties = workbook.calcProperties;
-                        break;
-                    }
-                    case 'xl/_rels/workbook.xml.rels':
-                        model.workbookRels = await this.parseRels(stream);
-                        break;
-                    case 'xl/sharedStrings.xml':
-                        model.sharedStrings = new SharedStringsXform();
-                        await model.sharedStrings.parseStream(stream);
-                        break;
-                    case 'xl/styles.xml':
-                        model.styles = new StylesXform();
-                        await model.styles.parseStream(stream);
-                        break;
-                    case 'docProps/app.xml': {
-                        const appXform = new AppXform();
-                        const appProperties = await appXform.parseStream(stream);
-                        model.company = appProperties.company;
-                        model.manager = appProperties.manager;
-                        break;
-                    }
-                    case 'docProps/core.xml': {
-                        const coreXform = new CoreXform();
-                        const coreProperties = await coreXform.parseStream(stream);
-                        Object.assign(model, coreProperties);
-                        break;
-                    }
-                    default: {
-                        let match = entryName.match(/xl\/worksheets\/sheet(\d+)[.]xml/);
-                        if (match) {
-                            await this._processWorksheetEntry(stream, model, match[1], options, entryName);
-                            break;
-                        }
-                        match = entryName.match(/xl\/worksheets\/_rels\/sheet(\d+)[.]xml.rels/);
-                        if (match) {
-                            await this._processWorksheetRelsEntry(stream, model, match[1]);
-                            break;
-                        }
-                        match = entryName.match(/xl\/theme\/([a-zA-Z0-9]+)[.]xml/);
-                        if (match) {
-                            await this._processThemeEntry(stream, model, match[1]);
-                            break;
-                        }
-                        match = entryName.match(/xl\/media\/([a-zA-Z0-9]+[.][a-zA-Z0-9]{3,4})$/);
-                        if (match) {
-                            await this._processMediaEntry(stream, model, match[1]);
-                            break;
-                        }
-                        match = entryName.match(/xl\/drawings\/([a-zA-Z0-9]+)[.]xml/);
-                        if (match) {
-                            await this._processDrawingEntry(stream, model, match[1]);
-                            break;
-                        }
-                        match = entryName.match(/xl\/(comments\d+)[.]xml/);
-                        if (match) {
-                            await this._processCommentEntry(stream, model, match[1]);
-                            break;
-                        }
-                        match = entryName.match(/xl\/tables\/(table\d+)[.]xml/);
-                        if (match) {
-                            await this._processTableEntry(stream, model, match[1]);
-                            break;
-                        }
-                        match = entryName.match(/xl\/drawings\/_rels\/([a-zA-Z0-9]+)[.]xml[.]rels/);
-                        if (match) {
-                            await this._processDrawingRelsEntry(stream, model, match[1]);
-                            break;
-                        }
-                        match = entryName.match(/xl\/drawings\/(vmlDrawing\d+)[.]vml/);
-                        if (match) {
-                            await this._processVmlDrawingEntry(stream, model, match[1]);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        this.reconcile(model, options);
-        // apply model
-        this.workbook.model = model;
-        return this.workbook;
-    }
+    // async load(data, options) {
+    //     let buffer;
+    //     if (options && options.base64) {
+    //         buffer = Buffer.from(data.toString(), 'base64');
+    //     }
+    //     else {
+    //         buffer = data;
+    //     }
+    //     const model = {
+    //         worksheets: [],
+    //         worksheetHash: {},
+    //         worksheetRels: [],
+    //         themes: {},
+    //         media: [],
+    //         mediaIndex: {},
+    //         drawings: {},
+    //         drawingRels: {},
+    //         comments: {},
+    //         tables: {},
+    //         vmlDrawings: {},
+    //     };
+    //     const zip = (await import('jszip')).loadAsync(databuffer)
+    //     for (const entry of Object.values(zip.files)) {
+    //         /* eslint-disable no-await-in-loop */
+    //         if (!entry.dir) {
+    //             let entryName = entry.name;
+    //             if (entryName[0] === '/') {
+    //                 entryName = entryName.substr(1);
+    //             }
+    //             let stream;
+    //             if (entryName.match(/xl\/media\//) ||
+    //                 // themes are not parsed as stream
+    //                 entryName.match(/xl\/theme\/([a-zA-Z0-9]+)[.]xml/)) {
+    //                 stream = new PassThrough();
+    //                 stream.write(await entry.async('nodebuffer'));
+    //             }
+    //             else {
+    //                 // use object mode to avoid buffer-string convention
+    //                 stream = new PassThrough({
+    //                     writableObjectMode: true,
+    //                     readableObjectMode: true,
+    //                 });
+    //                 // let content;
+    //                 // https://www.npmjs.com/package/process
+    //                 // if (process.browser) {
+    //                 //     // running in browser, use TextDecoder if possible
+    //                 //     content = bufferToString(await entry.async('nodebuffer'));
+    //                 // }
+    //                 // else {
+    //                 // running in node.js
+    //                 const content = await entry.async('string');
+    //                 // }
+    //                 const chunkSize = 16 * 1024;
+    //                 for (let i = 0; i < content.length; i += chunkSize) {
+    //                     stream.write(content.substring(i, i + chunkSize));
+    //                 }
+    //             }
+    //             stream.end();
+    //             switch (entryName) {
+    //                 case '_rels/.rels':
+    //                     model.globalRels = await this.parseRels(stream);
+    //                     break;
+    //                 case 'xl/workbook.xml': {
+    //                     const workbook = await this.parseWorkbook(stream);
+    //                     model.sheets = workbook.sheets;
+    //                     model.definedNames = workbook.definedNames;
+    //                     model.views = workbook.views;
+    //                     model.properties = workbook.properties;
+    //                     model.calcProperties = workbook.calcProperties;
+    //                     break;
+    //                 }
+    //                 case 'xl/_rels/workbook.xml.rels':
+    //                     model.workbookRels = await this.parseRels(stream);
+    //                     break;
+    //                 case 'xl/sharedStrings.xml':
+    //                     model.sharedStrings = new SharedStringsXform();
+    //                     await model.sharedStrings.parseStream(stream);
+    //                     break;
+    //                 case 'xl/styles.xml':
+    //                     model.styles = new StylesXform();
+    //                     await model.styles.parseStream(stream);
+    //                     break;
+    //                 case 'docProps/app.xml': {
+    //                     const appXform = new AppXform();
+    //                     const appProperties = await appXform.parseStream(stream);
+    //                     model.company = appProperties.company;
+    //                     model.manager = appProperties.manager;
+    //                     break;
+    //                 }
+    //                 case 'docProps/core.xml': {
+    //                     const coreXform = new CoreXform();
+    //                     const coreProperties = await coreXform.parseStream(stream);
+    //                     Object.assign(model, coreProperties);
+    //                     break;
+    //                 }
+    //                 default: {
+    //                     let match = entryName.match(/xl\/worksheets\/sheet(\d+)[.]xml/);
+    //                     if (match) {
+    //                         await this._processWorksheetEntry(stream, model, match[1], options, entryName);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/worksheets\/_rels\/sheet(\d+)[.]xml.rels/);
+    //                     if (match) {
+    //                         await this._processWorksheetRelsEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/theme\/([a-zA-Z0-9]+)[.]xml/);
+    //                     if (match) {
+    //                         await this._processThemeEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/media\/([a-zA-Z0-9]+[.][a-zA-Z0-9]{3,4})$/);
+    //                     if (match) {
+    //                         await this._processMediaEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/drawings\/([a-zA-Z0-9]+)[.]xml/);
+    //                     if (match) {
+    //                         await this._processDrawingEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/(comments\d+)[.]xml/);
+    //                     if (match) {
+    //                         await this._processCommentEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/tables\/(table\d+)[.]xml/);
+    //                     if (match) {
+    //                         await this._processTableEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/drawings\/_rels\/([a-zA-Z0-9]+)[.]xml[.]rels/);
+    //                     if (match) {
+    //                         await this._processDrawingRelsEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                     match = entryName.match(/xl\/drawings\/(vmlDrawing\d+)[.]vml/);
+    //                     if (match) {
+    //                         await this._processVmlDrawingEntry(stream, model, match[1]);
+    //                         break;
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     this.reconcile(model, options);
+    //     // apply model
+    //     this.workbook.model = model;
+    //     return this.workbook;
+    // }
     // =========================================================================
     // Write
     async addMedia(zip, model) {
@@ -399,7 +420,9 @@ export default class {
         }));
     }
     addDrawings(zip, model) {
-        const drawingXform = new DrawingXform();
+
+        XLSX.loadDrawingXform();
+        const drawingXform = new XLSX.DrawingXform();
         const relsXform = new RelationshipsXform();
         model.worksheets.forEach(worksheet => {
             const { drawing } = worksheet;
@@ -423,22 +446,33 @@ export default class {
             });
         });
     }
+    static PivotCacheRecordsXform;
+    static PivotCacheDefinitionXform;
+    static PivotTableXform;
+    static async loadPivotForms() {
+      if(!(typeof XLSX.PivotCacheRecordsXform === 'undefined')) return
+      XLSX.PivotCacheRecordsXform = (await import( "./xform/pivot-table/pivot-cache-records-xform.js")).default;
+      XLSX.PivotCacheDefinitionXform = (await import( "./xform/pivot-table/pivot-cache-definition-xform.js")).default;
+      XLSX.PivotTableXform = (await import( "./xform/pivot-table/pivot-table-xform.js")).default;
+    }
+    
     addPivotTables(zip, model) {
-        if (!model.pivotTables.length)
-            return;
+        if (!model.pivotTables.length) return;
+        (async()=>await XLSX.loadPivotForms())();
+        
         const pivotTable = model.pivotTables[0];
-        const pivotCacheRecordsXform = new PivotCacheRecordsXform();
-        const pivotCacheDefinitionXform = new PivotCacheDefinitionXform();
-        const pivotTableXform = new PivotTableXform();
+        const pivotCacheRecordsXform = new XLSX.PivotCacheRecordsXform();
+        const pivotCacheDefinitionXform = new XLSX.PivotCacheDefinitionXform();
+        const pivotTableXform = new XLSX.PivotTableXform();
         const relsXform = new RelationshipsXform();
-        // pivot cache records
+        // pi vot cache records
         // --------------------------------------------------
         // copy of the source data.
         //
         // Note: cells in the columns of the source data which are part
-        // of the "rows" or "columns" of the pivot table configuration are
+        // of the "rows" or "columns" of the p ivot table configuration are
         // replaced by references to their __cache field__ identifiers.
-        // See "pivot cache definition" below.
+        // See "piv ot cache definition" below.
         let xml = pivotCacheRecordsXform.toXml(pivotTable);
         zip.append(xml, { name: 'xl/pivotCache/pivotCacheRecords1.xml' });
         // pivot cache definition
@@ -483,11 +517,13 @@ export default class {
         const xml = xform.toXml(model);
         zip.append(xml, { name: '[Content_Types].xml' });
     }
-    async addApp(zip, model) {
-        const xform = new AppXform();
-        const xml = xform.toXml(model);
-        zip.append(xml, { name: 'docProps/app.xml' });
-    }
+    
+    // async addApp(zip, model) {
+    //     const xform = new AppXform();
+    //     const xml = xform.toXml(model);
+    //     zip.append(xml, { name: 'docProps/app.xml' });
+    // }
+    
     async addCore(zip, model) {
         const coreXform = new CoreXform();
         zip.append(coreXform.toXml(model), { name: 'docProps/core.xml' });
@@ -558,13 +594,14 @@ export default class {
         const xform = new WorkbookXform();
         zip.append(xform.toXml(model), { name: 'xl/workbook.xml' });
     }
+    
     async addWorksheets(zip, model) {
         // preparation phase
         const worksheetXform = new WorksheetXform();
         const relationshipsXform = new RelationshipsXform();
-        const commentsXform = new CommentsXform();
-        const vmlNotesXform = new VmlNotesXform();
+        let commentsXform,vmlNotesXform, cxLoaded = false;
         // write sheets
+        
         model.worksheets.forEach(worksheet => {
             let xmlStream = new XmlStream();
             worksheetXform.render(xmlStream, worksheet);
@@ -575,6 +612,16 @@ export default class {
                 zip.append(xmlStream.xml, { name: `xl/worksheets/_rels/sheet${worksheet.id}.xml.rels` });
             }
             if (worksheet.comments.length > 0) {
+                if(!cxLoaded){
+                  (async()=>{
+                    await XLSX.loadCommentsForm();
+                    await XLSX.loadVml();
+                  })();
+                  commentsXform = new XLSX.CommentsXform();
+                  vmlNotesXform = new XLSX.vmlNotesXform();
+                  cxLoaded = true;
+                }
+                
                 xmlStream = new XmlStream();
                 commentsXform.render(xmlStream, worksheet);
                 zip.append(xmlStream.xml, { name: `xl/comments${worksheet.id}.xml` });

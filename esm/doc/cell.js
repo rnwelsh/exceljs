@@ -1,7 +1,7 @@
 // @ts-nocheck
-import colCache from "../utils/col-cache.js";
+import { validateAddress } from "../utils/col-cache.js";
 import { escapeHtml } from "../utils/under-dash.js";
-import Enums from "./enums.js";
+import {ValueType,FormulaType} from "./enums.js";
 import { slideFormula } from "../utils/shared-formula.js";
 import Note from "./note.js";
 // Cell requirements
@@ -15,7 +15,7 @@ class Cell {
         }
         this._row = row;
         this._column = column;
-        colCache.validateAddress(address);
+        validateAddress(address);
         this._address = address;
         // TODO: lazy evaluation of this._value
         this._value = Value.create(Cell.Types.Null, this);
@@ -288,7 +288,7 @@ class Cell {
         }
     }
 }
-Cell.Types = Enums.ValueType;
+Cell.Types = ValueType;
 // =============================================================================
 // Internal Value Types
 class NullValue {
@@ -652,12 +652,12 @@ class FormulaValue {
     }
     get formulaType() {
         if (this.model.formula) {
-            return Enums.FormulaType.Master;
+            return FormulaType.Master;
         }
         if (this.model.sharedFormula) {
-            return Enums.FormulaType.Shared;
+            return FormulaType.Shared;
         }
-        return Enums.FormulaType.None;
+        return FormulaType.None;
     }
     get result() {
         return this.model.result;
@@ -671,24 +671,24 @@ class FormulaValue {
     get effectiveType() {
         const v = this.model.result;
         if (v === null || v === undefined) {
-            return Enums.ValueType.Null;
+            return ValueType.Null;
         }
         if (v instanceof String || typeof v === 'string') {
-            return Enums.ValueType.String;
+            return ValueType.String;
         }
         if (typeof v === 'number') {
-            return Enums.ValueType.Number;
+            return ValueType.Number;
         }
         if (v instanceof Date) {
-            return Enums.ValueType.Date;
+            return ValueType.Date;
         }
         if (v.text && v.hyperlink) {
-            return Enums.ValueType.Hyperlink;
+            return ValueType.Hyperlink;
         }
         if (v.formula) {
-            return Enums.ValueType.Formula;
+            return ValueType.Formula;
         }
-        return Enums.ValueType.Null;
+        return ValueType.Null;
     }
     get address() {
         return this.model.address;

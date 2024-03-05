@@ -21,7 +21,7 @@
     "allowArbitraryExtensions": false,
     "allowUmdGlobalAccess": true,
     "alwaysStrict": false,
-    "isolatedModules": true,
+    // "isolatedModules": true,
 
     /* Visit https://aka.ms/tsconfig to read more about this file */
 
@@ -127,5 +127,5 @@
   },
   "include": [
     "./esm/**/*"
-  ]
+, "dist/exceljs.js"  ]
 }

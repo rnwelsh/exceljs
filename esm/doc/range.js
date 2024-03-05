@@ -1,4 +1,4 @@
-import colCache from "../utils/col-cache.js";
+import {decodeAddress,decodeEx,n2l,encodeAddress} from "../utils/col-cache.js";
 // used by worksheet to calculate sheet dimensions
 class Range {
     constructor() {
@@ -7,8 +7,8 @@ class Range {
     setTLBR(t, l, b, r, s) {
         if (arguments.length < 4) {
             // setTLBR(tl, br, s)
-            const tl = colCache.decodeAddress(t);
-            const br = colCache.decodeAddress(l);
+            const tl = decodeAddress(t);
+            const br = decodeAddress(l);
             this.model = {
                 top: Math.min(tl.row, br.row),
                 left: Math.min(tl.col, br.col),
@@ -71,7 +71,7 @@ class Range {
                 }
                 else {
                     // [sheetName!]tl:br
-                    const tlbr = colCache.decodeEx(value);
+                    const tlbr = decodeEx(value);
                     if (tlbr.top) {
                         this.model = {
                             top: tlbr.top,
@@ -164,20 +164,20 @@ class Range {
         }
     }
     expandToAddress(addressStr) {
-        const address = colCache.decodeEx(addressStr);
+        const address = decodeEx(addressStr);
         this.expand(address.row, address.col, address.row, address.col);
     }
     get tl() {
-        return colCache.n2l(this.left) + this.top;
+        return n2l(this.left) + this.top;
     }
     get $t$l() {
-        return `$${colCache.n2l(this.left)}$${this.top}`;
+        return `$${n2l(this.left)}$${this.top}`;
     }
     get br() {
-        return colCache.n2l(this.right) + this.bottom;
+        return n2l(this.right) + this.bottom;
     }
     get $b$r() {
-        return `$${colCache.n2l(this.right)}$${this.bottom}`;
+        return `$${n2l(this.right)}$${this.bottom}`;
     }
     get range() {
         return `${this._serialisedSheetName + this.tl}:${this.br}`;
@@ -211,7 +211,7 @@ class Range {
         return true;
     }
     contains(addressStr) {
-        const address = colCache.decodeEx(addressStr);
+        const address = decodeEx(addressStr);
         return this.containsEx(address);
     }
     containsEx(address) {
@@ -225,7 +225,7 @@ class Range {
     forEachAddress(cb) {
         for (let col = this.left; col <= this.right; col++) {
             for (let row = this.top; row <= this.bottom; row++) {
-                cb(colCache.encodeAddress(row, col), row, col);
+                cb(encodeAddress(row, col), row, col);
             }
         }
     }

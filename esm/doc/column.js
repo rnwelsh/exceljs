@@ -1,6 +1,5 @@
 import { isEqual } from "../utils/under-dash.js";
-import Enums from "./enums.js";
-import colCache from "../utils/col-cache.js";
+import { n2l } from "../utils/col-cache.js";
 'use strict';
 const DEFAULT_COLUMN_WIDTH = 9;
 // Column defines the column properties for 1 column.
@@ -22,7 +21,7 @@ class Column {
         return this._worksheet;
     }
     get letter() {
-        return colCache.n2l(this._number);
+        return n2l(this._number);
     }
     get isCustomWidth() {
         return this.width !== undefined && this.width !== DEFAULT_COLUMN_WIDTH;
@@ -150,7 +149,7 @@ class Column {
     get values() {
         const v = [];
         this.eachCell((cell, rowNumber) => {
-            if (cell && cell.type !== Enums.ValueType.Null) {
+            if (cell && cell.type !== 0) {
                 v[rowNumber] = cell.value;
             }
         });

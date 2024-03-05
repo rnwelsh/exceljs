@@ -1,18 +1,18 @@
-import _ from "./under-dash.js";
-import colCache from "./col-cache.js";
+import {each} from "./under-dash.js";
+import {decodeEx,n2l} from "./col-cache.js";
 class CellMatrix {
     constructor(template) {
         this.template = template;
         this.sheets = {};
     }
     addCell(addressStr) {
-        this.addCellEx(colCache.decodeEx(addressStr));
+        this.addCellEx(decodeEx(addressStr));
     }
     getCell(addressStr) {
-        return this.findCellEx(colCache.decodeEx(addressStr), true);
+        return this.findCellEx(decodeEx(addressStr), true);
     }
     findCell(addressStr) {
-        return this.findCellEx(colCache.decodeEx(addressStr), false);
+        return this.findCellEx(decodeEx(addressStr), false);
     }
     findCellAt(sheetName, rowNumber, colNumber) {
         const sheet = this.sheets[sheetName];
@@ -45,7 +45,7 @@ class CellMatrix {
         const cell = row[colNumber] ||
             (row[colNumber] = {
                 sheetName,
-                address: colCache.n2l(colNumber) + rowNumber,
+                address: n2l(colNumber) + rowNumber,
                 row: rowNumber,
                 col: colNumber,
             });
@@ -77,7 +77,7 @@ class CellMatrix {
         }
     }
     forEach(callback) {
-        _.each(this.sheets, (sheet, sheetName) => {
+        each(this.sheets, (sheet, sheetName) => {
             this.forEachInSheet(sheetName, callback);
         });
     }
@@ -137,7 +137,7 @@ class CellMatrix {
             for (let i = 0; i < numInsert; i++) {
                 inserts.push(null);
             }
-            _.each(sheet, row => {
+            each(sheet, row => {
                 row.splice(start, numDelete, ...inserts);
             });
         }

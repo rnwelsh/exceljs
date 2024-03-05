@@ -1,4 +1,4 @@
-import colCache from "../../../utils/col-cache.js";
+import {getAddress} from "../../../utils/col-cache.js";
 import BaseXform from "../base-xform.js";
 class AutoFilterXform extends BaseXform {
     get tag() {
@@ -15,7 +15,7 @@ class AutoFilterXform extends BaseXform {
                     if (typeof addr === 'string') {
                         return addr;
                     }
-                    return colCache.getAddress(addr.row, addr.column).address;
+                    return getAddress(addr.row, addr.column).address;
                 };
                 const firstAddress = getAddress(model.from);
                 const secondAddress = getAddress(model.to);

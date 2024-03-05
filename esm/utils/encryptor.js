@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import {createHash} from "node:crypto";
 'use strict';
 const Encryptor = {
     /**
@@ -23,14 +23,14 @@ const Encryptor = {
      */
     convertPasswordToHash(password, hashAlgorithm, saltValue, spinCount) {
         hashAlgorithm = hashAlgorithm.toLowerCase();
-        const hashes = crypto.getHashes();
-        if (hashes.indexOf(hashAlgorithm) < 0) {
-            throw new Error(`Hash algorithm '${hashAlgorithm}' not supported!`);
-        }
+        // const hashes = crypto.getHashes();
+        // if (hashes.indexOf(hashAlgorithm) < 0) {
+        //     throw new Error(`Hash algorithm '${hashAlgorithm}' not supported!`);
+        // }
         // Password must be in unicode buffer
         const passwordBuffer = Buffer.from(password, 'utf16le');
         // Generate the initial hash
-        let key = this.hash('sha256', Buffer.from(saltValue, 'base64'), passwordBuffer);
+        let key = this.hash(hashAlgorithm, Buffer.from(saltValue, 'base64'), passwordBuffer);
         // Now regenerate until spin count
         for (let i = 0; i < spinCount; i++) {
             const iterator = Buffer.alloc(4);

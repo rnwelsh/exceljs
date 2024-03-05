@@ -1,5 +1,5 @@
-import _ from "../../../utils/under-dash.js";
-import colCache from "../../../utils/col-cache.js";
+import {each} from "../../../utils/under-dash.js";
+import {decodeAddress} from "../../../utils/col-cache.js";
 import XmlStream from "../../../utils/xml-stream.js";
 import RelType from "../../rel-type.js";
 import Merges from "./merges.js";
@@ -163,7 +163,7 @@ class WorkSheetXform extends BaseXform {
             };
             rels.push(vmlDrawing);
             model.comments.forEach(item => {
-                item.refAddress = colCache.decodeAddress(item.ref);
+                item.refAddress = decodeAddress(item.ref);
             });
             options.commentRefs.push({
                 commentName: `comments${model.id}`,
@@ -335,7 +335,7 @@ class WorkSheetXform extends BaseXform {
             return true;
         }
         if (node.name === 'worksheet') {
-            _.each(this.map, xform => {
+            each(this.map, xform => {
                 xform.reset();
             });
             return true;

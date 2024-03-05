@@ -1,6 +1,6 @@
-import _ from "../../../utils/under-dash.js";
+import {map,strcmp,keyBy,isEqual} from "../../../utils/under-dash.js";
 import { dateToExcel, excelToDate, parseBoolean } from "../../../utils/utils.js";
-import colCache from "../../../utils/col-cache.js";
+import {encodeAddress,decodeEx} from "../../../utils/col-cache.js";
 import BaseXform from "../base-xform.js";
 import Range from "../../../doc/range.js";
 function assign(definedName, attributes, name, defaultValue) {
@@ -24,16 +24,16 @@ function assignBool(definedName, attributes, name, defaultValue) {
 function optimiseDataValidations(model) {
     // Squeeze alike data validations together into rectangular ranges
     // to reduce file size and speed up Excel load time
-    const dvList = _.map(model, (dataValidation, address) => ({
+    const dvList = map(model, (dataValidation, address) => ({
         address,
         dataValidation,
         marked: false,
-    })).sort((a, b) => _.strcmp(a.address, b.address));
-    const dvMap = _.keyBy(dvList, 'address');
+    })).sort((a, b) => strcmp(a.address, b.address));
+    const dvMap = keyBy(dvList, 'address');
     const matchCol = (addr, height, col) => {
         for (let i = 0; i < height; i++) {
-            const otherAddress = colCache.encodeAddress(addr.row + i, col);
-            if (!model[otherAddress] || !_.isEqual(model[addr.address], model[otherAddress])) {
+            const otherAddress = encodeAddress(addr.row + i, col);
+            if (!model[otherAddress] || !isEqual(model[addr.address], model[otherAddress])) {
                 return false;
             }
         }
@@ -42,7 +42,7 @@ function optimiseDataValidations(model) {
     return dvList
         .map(dv => {
         if (!dv.marked) {
-            const addr = colCache.decodeEx(dv.address);
+            const addr = decodeEx(dv.address);
             if (addr.dimensions) {
                 dvMap[addr.dimensions].marked = true;
                 return {
@@ -52,10 +52,10 @@ function optimiseDataValidations(model) {
             }
             // iterate downwards - finding matching cells
             let height = 1;
-            let otherAddress = colCache.encodeAddress(addr.row + height, addr.col);
-            while (model[otherAddress] && _.isEqual(dv.dataValidation, model[otherAddress])) {
+            let otherAddress = encodeAddress(addr.row + height, addr.col);
+            while (model[otherAddress] && isEqual(dv.dataValidation, model[otherAddress])) {
                 height++;
-                otherAddress = colCache.encodeAddress(addr.row + height, addr.col);
+                otherAddress = encodeAddress(addr.row + height, addr.col);
             }
             // iterate rightwards...
             let width = 1;
@@ -65,7 +65,7 @@ function optimiseDataValidations(model) {
             // mark all included addresses
             for (let i = 0; i < height; i++) {
                 for (let j = 0; j < width; j++) {
-                    otherAddress = colCache.encodeAddress(addr.row + i, addr.col + j);
+                    otherAddress = encodeAddress(addr.row + i, addr.col + j);
                     dvMap[otherAddress].marked = true;
                 }
             }
@@ -74,7 +74,7 @@ function optimiseDataValidations(model) {
                 const right = addr.col + (width - 1);
                 return {
                     ...dv.dataValidation,
-                    sqref: `${dv.address}:${colCache.encodeAddress(bottom, right)}`,
+                    sqref: `${dv.address}:${encodeAddress(bottom, right)}`,
                 };
             }
             return {

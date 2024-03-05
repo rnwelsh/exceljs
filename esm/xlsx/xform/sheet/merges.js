@@ -1,7 +1,6 @@
-import _ from "../../../utils/under-dash.js";
+import {map,each} from "../../../utils/under-dash.js";
 import Range from "../../../doc/range.js";
-import colCache from "../../../utils/col-cache.js";
-import Enums from "../../../doc/enums.js";
+import {decode,encodeAddress} from "../../../utils/col-cache.js";
 class Merges {
     constructor() {
         // optional mergeCells is array of ranges (like the xml)
@@ -18,12 +17,12 @@ class Merges {
         }
     }
     get mergeCells() {
-        return _.map(this.merges, merge => merge.range);
+        return map(this.merges, merge => merge.range);
     }
     reconcile(mergeCells, rows) {
         // reconcile merge list with merge cells
-        _.each(mergeCells, merge => {
-            const dimensions = colCache.decode(merge);
+        each(mergeCells, merge => {
+            const dimensions = decode(merge);
             for (let i = dimensions.top; i <= dimensions.bottom; i++) {
                 const row = rows[i - 1];
                 for (let j = dimensions.left; j <= dimensions.right; j++) {
@@ -31,11 +30,11 @@ class Merges {
                     if (!cell) {
                         // nulls are not included in document - so if master cell has no value - add a null one here
                         row.cells[j] = {
-                            type: Enums.ValueType.Null,
-                            address: colCache.encodeAddress(i, j),
+                            type: 0,
+                            address: encodeAddress(i, j),
                         };
                     }
-                    else if (cell.type === Enums.ValueType.Merge) {
+                    else if (cell.type === 1) {
                         cell.master = dimensions.tl;
                     }
                 }

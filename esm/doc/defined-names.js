@@ -1,5 +1,5 @@
 import { each, map } from "../utils/under-dash.js";
-import colCache from "../utils/col-cache.js";
+import { decodeEx, n2l } from "../utils/col-cache.js";
 import CellMatrix from "../utils/cell-matrix.js";
 import Range from "./range.js";
 'use strict';
@@ -14,7 +14,7 @@ class DefinedNames {
     }
     // add a name to a cell. locStr in the form SheetName!$col$row or SheetName!$c1$r1:$c2:$r2
     add(locStr, name) {
-        const location = colCache.decodeEx(locStr);
+        const location = decodeEx(locStr);
         this.addEx(location, name);
     }
     addEx(location, name) {
@@ -24,7 +24,7 @@ class DefinedNames {
                 for (let row = location.top; row <= location.bottom; row++) {
                     const address = {
                         sheetName: location.sheetName,
-                        address: colCache.n2l(col) + row,
+                        address: n2l(col) + row,
                         row,
                         col,
                     };
@@ -37,7 +37,7 @@ class DefinedNames {
         }
     }
     remove(locStr, name) {
-        const location = colCache.decodeEx(locStr);
+        const location = decodeEx(locStr);
         this.removeEx(location, name);
     }
     removeEx(location, name) {
@@ -58,7 +58,7 @@ class DefinedNames {
     }
     // get all the names of a cell
     getNames(addressStr) {
-        return this.getNamesEx(colCache.decodeEx(addressStr));
+        return this.getNamesEx(decodeEx(addressStr));
     }
     getNamesEx(address) {
         return map(this.matrixMap, (matrix, name) => matrix.findCellEx(address) && name).filter(Boolean);
@@ -133,7 +133,7 @@ class DefinedNames {
                 if (cell.row !== row || cell.col !== col) {
                     cell.row = row;
                     cell.col = col;
-                    cell.address = colCache.n2l(col) + row;
+                    cell.address = n2l(col) + row;
                 }
             }
         });

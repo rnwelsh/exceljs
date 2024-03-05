@@ -1,10 +1,10 @@
-import colCache from "../../../utils/col-cache.js";
+import {decode} from "../../../utils/col-cache.js";
 import XmlStream from "../../../utils/xml-stream.js";
 import BaseXform from "../base-xform.js";
 import TwoCellAnchorXform from "./two-cell-anchor-xform.js";
 import OneCellAnchorXform from "./one-cell-anchor-xform.js";
 function getAnchorType(model) {
-    const range = typeof model.range === 'string' ? colCache.decode(model.range) : model.range;
+    const range = typeof model.range === 'string' ? decode(model.range) : model.range;
     return range.br ? 'xdr:twoCellAnchor' : 'xdr:oneCellAnchor';
 }
 class DrawingXform extends BaseXform {

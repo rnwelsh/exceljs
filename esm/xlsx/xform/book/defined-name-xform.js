@@ -1,5 +1,5 @@
 import BaseXform from "../base-xform.js";
-import colCache from "../../../utils/col-cache.js";
+import {decodeEx} from "../../../utils/col-cache.js";
 class DefinedNamesXform extends BaseXform {
     render(xmlStream, model) {
         // <definedNames>
@@ -40,7 +40,7 @@ class DefinedNamesXform extends BaseXform {
 }
 function isValidRange(range) {
     try {
-        colCache.decodeEx(range);
+        decodeEx(range);
         return true;
     }
     catch (err) {

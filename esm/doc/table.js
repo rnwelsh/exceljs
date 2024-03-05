@@ -1,4 +1,4 @@
-import colCache from "../utils/col-cache.js";
+import {decodeAddress,encode} from "../utils/col-cache.js";
 class Column {
     // wrapper around column model, allowing access and manipulation
     constructor(table, column, index) {
@@ -131,15 +131,15 @@ class Table {
         assert(table.ref, 'Table must have ref');
         assert(table.columns, 'Table must have column definitions');
         assert(table.rows, 'Table must have row definitions');
-        table.tl = colCache.decodeAddress(table.ref);
+        table.tl = decodeAddress(table.ref);
         const { row, col } = table.tl;
         assert(row > 0, 'Table must be on valid row');
         assert(col > 0, 'Table must be on valid col');
         const { width, filterHeight, tableHeight } = this;
         // autoFilterRef is a range that includes optional headers only
-        table.autoFilterRef = colCache.encode(row, col, row + filterHeight - 1, col + width - 1);
+        table.autoFilterRef = encode(row, col, row + filterHeight - 1, col + width - 1);
         // tableRef is a range that includes optional headers and totals
-        table.tableRef = colCache.encode(row, col, row + tableHeight - 1, col + width - 1);
+        table.tableRef = encode(row, col, row + tableHeight - 1, col + width - 1);
         table.columns.forEach((column, i) => {
             assert(column.name, `Column ${i} must have a name`);
             if (i === 0) {
@@ -266,7 +266,7 @@ class Table {
         }
         // check things are ok first
         this.validate();
-        const ref = colCache.decodeAddress(this._cache.ref);
+        const ref = decodeAddress(this._cache.ref);
         if (this.ref !== this._cache.ref) {
             // wipe out whole table footprint at previous location
             for (let i = 0; i < this._cache.tableHeight; i++) {

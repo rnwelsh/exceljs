@@ -8,7 +8,7 @@ import XLSX from "../xlsx/xlsx.js";
 //  Access/Add/Delete individual worksheets
 //  Manage String table, Hyperlink table, etc.
 //  Manage scaffolding for contained objects to write to/read from
-class Workbook {
+export default class Workbook {
     constructor() {
         this.category = '';
         this.company = '';
@@ -194,4 +194,3 @@ class Workbook {
         this.pivotTables = value.pivotTables || [];
     }
 }
-export default Workbook;

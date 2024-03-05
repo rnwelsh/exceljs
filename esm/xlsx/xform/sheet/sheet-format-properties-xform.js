@@ -1,4 +1,4 @@
-import _ from "../../../utils/under-dash.js";
+import {some} from "../../../utils/under-dash.js";
 import BaseXform from "../base-xform.js";
 class SheetFormatPropertiesXform extends BaseXform {
     get tag() {
@@ -19,7 +19,7 @@ class SheetFormatPropertiesXform extends BaseXform {
             if (!model.defaultRowHeight || model.defaultRowHeight !== 15) {
                 attributes.customHeight = '1';
             }
-            if (_.some(attributes, value => value !== undefined)) {
+            if (some(attributes, value => value !== undefined)) {
                 xmlStream.leafNode('sheetFormatPr', attributes);
             }
         }

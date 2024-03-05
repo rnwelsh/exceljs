@@ -1,6 +1,6 @@
-import _ from "../../utils/under-dash.js";
+import {each} from "../../utils/under-dash.js";
 import RelType from "../../xlsx/rel-type.js";
-import colCache from "../../utils/col-cache.js";
+import {l2n,getAddress} from "../../utils/col-cache.js";
 // import Encryptor from "../../utils/encryptor.js";
 import Dimensions from "../../doc/range.js";
 import StringBuf from "../../utils/string-buf.js";
@@ -21,8 +21,7 @@ import SheetProtectionXform from "../../xlsx/xform/sheet/sheet-protection-xform.
 import PageMarginsXform from "../../xlsx/xform/sheet/page-margins-xform.js";
 import PageSetupXform from "../../xlsx/xform/sheet/page-setup-xform.js";
 import AutoFilterXform from "../../xlsx/xform/sheet/auto-filter-xform.js";
-import PictureXform from "../../xlsx/xform/sheet/picture-xform.js";
-import ConditionalFormattingsXform from "../../xlsx/xform/sheet/cf/conditional-formattings-xform.js";
+// import ConditionalFormattingsXform from "../../xlsx/xform/sheet/cf/conditional-formattings-xform.js";
 import HeaderFooterXform from "../../xlsx/xform/sheet/header-footer-xform.js";
 import RowBreaksXform from "../../xlsx/xform/sheet/row-breaks-xform.js";
 const xmlBuffer = new StringBuf();
@@ -39,8 +38,8 @@ const xform = {
     pageMargins: new PageMarginsXform(),
     pageSeteup: new PageSetupXform(),
     autoFilter: new AutoFilterXform(),
-    picture: new PictureXform(),
-    conditionalFormattings: new ConditionalFormattingsXform(),
+    picture: undefined, // new PictureXform(),
+    conditionalFormattings: undefined, //new ConditionalFormattingsXform(),
     headerFooter: new HeaderFooterXform(),
     rowBreaks: new RowBreaksXform(),
 };
@@ -235,7 +234,7 @@ class WorksheetWriter {
         delete this._keys[key];
     }
     eachColumnKey(f) {
-        _.each(this._keys, f);
+        each(this._keys, f);
     }
     // get a single column by col number. If it doesn't exist, it and any gaps before it
     // are created.
@@ -246,7 +245,7 @@ class WorksheetWriter {
             if (col)
                 return col;
             // otherwise, assume letter
-            c = colCache.l2n(c);
+            c = l2n(c);
         }
         if (!this._columns) {
             this._columns = [];
@@ -331,13 +330,13 @@ class WorksheetWriter {
     // Cells
     // returns the cell at [r,c] or address given by r. If not found, return undefined
     findCell(r, c) {
-        const address = colCache.getAddress(r, c);
+        const address = getAddress(r, c);
         const row = this.findRow(address.row);
         return row ? row.findCell(address.column) : undefined;
     }
     // return the cell at [r,c] or address given by r. If not found, create a new one.
     getCell(r, c) {
-        const address = colCache.getAddress(r, c);
+        const address = getAddress(r, c);
         const row = this.getRow(address.row);
         return row.getCellEx(address);
     }
@@ -364,7 +363,14 @@ class WorksheetWriter {
     }
     // ===========================================================================
     // Conditional Formatting
+    
     addConditionalFormatting(cf) {
+        if(typeof xform.conditionalFormattings === 'undefined') {
+          (async()=>{
+            const cfx = (await import("../../xlsx/xform/sheet/cf/conditional-formattings-xform.js")).default;
+            xform.conditionalFormattings = new cfx()
+          })();
+        }
         this.conditionalFormatting.push(cf);
     }
     removeConditionalFormatting(filter) {
@@ -517,6 +523,7 @@ class WorksheetWriter {
         this.stream.write(xform.hyperlinks.toXml(this._sheetRelsWriter._hyperlinks));
     }
     _writeConditionalFormatting() {
+        if(this.conditionalFormatting.length===0) return
         const options = {
             styles: this._workbook.styles,
         };
@@ -546,6 +553,11 @@ class WorksheetWriter {
     }
     _writeBackground() {
         if (this._background) {
+            (async ()=> {
+              const px = (await import("../../xlsx/xform/sheet/picture-xform.js")).default;
+              xform.picture = new px();
+            })();
+          
             if (this._background.imageId !== undefined) {
                 const image = this._workbook.getImage(this._background.imageId);
                 const pictureId = this._sheetRelsWriter.addMedia({
@@ -557,6 +569,7 @@ class WorksheetWriter {
                     rId: pictureId,
                 };
             }
+            if(typeof pictureXform === 'undefined') return
             this.stream.write(xform.picture.toXml({ rId: this._background.rId }));
         }
     }

@@ -1,8 +1,8 @@
-import events from "events";
+import { EventEmitter } from "node:events";
 import parseSax from "../../utils/parse-sax.js";
-import Enums from "../../doc/enums.js";
+import {RelationshipType} from "../../doc/enums.js";
 import RelType from "../../xlsx/rel-type.js";
-const { EventEmitter } = events;
+
 class HyperlinkReader extends EventEmitter {
     constructor({ workbook, id, iterator, options }) {
         super();
@@ -46,7 +46,7 @@ class HyperlinkReader extends EventEmitter {
                                 case RelType.Hyperlink:
                                     {
                                         const relationship = {
-                                            type: Enums.RelationshipType.Styles,
+                                            type: RelationshipType.Styles,
                                             rId,
                                             target: node.attributes.Target,
                                             targetMode: node.attributes.TargetMode,

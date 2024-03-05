@@ -1,4 +1,4 @@
-import colCache from "../utils/col-cache.js";
+import {decode} from "../utils/col-cache.js";
 import Anchor from "./anchor.js";
 class Image {
     constructor(worksheet, model) {
@@ -33,7 +33,7 @@ class Image {
         this.imageId = imageId;
         if (type === 'image') {
             if (typeof range === 'string') {
-                const decoded = colCache.decode(range);
+                const decoded = decode(range);
                 this.range = {
                     tl: new Anchor(this.worksheet, { col: decoded.left, row: decoded.top }, -1),
                     br: new Anchor(this.worksheet, { col: decoded.right, row: decoded.bottom }, 0),

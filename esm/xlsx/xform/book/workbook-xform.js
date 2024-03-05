@@ -1,5 +1,5 @@
-import _ from "../../../utils/under-dash.js";
-import colCache from "../../../utils/col-cache.js";
+import {each} from "../../../utils/under-dash.js";
+import {decodeEx} from "../../../utils/col-cache.js";
 import XmlStream from "../../../utils/xml-stream.js";
 import BaseXform from "../base-xform.js";
 import StaticXform from "../static-xform.js";
@@ -167,14 +167,14 @@ class WorkbookXform extends BaseXform {
         });
         // reconcile print areas
         const definedNames = [];
-        _.each(model.definedNames, definedName => {
+        each(model.definedNames, definedName => {
             if (definedName.name === '_xlnm.Print_Area') {
                 worksheet = worksheets[definedName.localSheetId];
                 if (worksheet) {
                     if (!worksheet.pageSetup) {
                         worksheet.pageSetup = {};
                     }
-                    const range = colCache.decodeEx(definedName.ranges[0]);
+                    const range = decodeEx(definedName.ranges[0]);
                     worksheet.pageSetup.printArea = worksheet.pageSetup.printArea
                         ? `${worksheet.pageSetup.printArea}&&${range.dimensions}`
                         : range.dimensions;

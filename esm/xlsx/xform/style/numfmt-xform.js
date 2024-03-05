@@ -1,9 +1,9 @@
-import _ from "../../../utils/under-dash.js";
+import {each} from "../../../utils/under-dash.js";
 import defaultNumFormats from "../../defaultnumformats.js";
 import BaseXform from "../base-xform.js";
 function hashDefaultFormats() {
     const hash = {};
-    _.each(defaultNumFormats, (dnf, id) => {
+    each(defaultNumFormats, (dnf, id) => {
         if (dnf.f) {
             hash[dnf.f] = parseInt(id, 10);
         }

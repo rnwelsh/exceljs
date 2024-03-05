@@ -1,9 +1,9 @@
 import { each, some } from "../utils/under-dash.js";
-import colCache from "../utils/col-cache.js";
+import {getAddress,l2n,encodeAddress,decode} from "../utils/col-cache.js";
 import Range from "./range.js";
 import Row from "./row.js";
 import Column from "./column.js";
-import Enums from "./enums.js";
+import {ValueType} from "./enums.js";
 import Image from "./image.js";
 import Table from "./table.js";
 import DataValidations from "./data-validations.js";
@@ -191,7 +191,7 @@ class Worksheet {
             if (col)
                 return col;
             // otherwise, assume letter
-            c = colCache.l2n(c);
+            c = l2n(c);
         }
         if (!this._columns) {
             this._columns = [];
@@ -502,13 +502,13 @@ class Worksheet {
     // Cells
     // returns the cell at [r,c] or address given by r. If not found, return undefined
     findCell(r, c) {
-        const address = colCache.getAddress(r, c);
+        const address = getAddress(r, c);
         const row = this._rows[address.row - 1];
         return row ? row.findCell(address.col) : undefined;
     }
     // return the cell at [r,c] or address given by r. If not found, create a new one.
     getCell(r, c) {
-        const address = colCache.getAddress(r, c);
+        const address = getAddress(r, c);
         const row = this.getRow(address.row);
         return row.getCellEx(address);
     }
@@ -569,7 +569,7 @@ class Worksheet {
             for (let j = dimensions.left; j <= dimensions.right; j++) {
                 const cell = this.findCell(i, j);
                 if (cell) {
-                    if (cell.type === Enums.ValueType.Merge) {
+                    if (cell.type === ValueType.Merge) {
                         // this cell merges to another master
                         this._unMergeMaster(cell.master);
                     }
@@ -585,10 +585,10 @@ class Worksheet {
     // Shared/Array Formula
     fillFormula(range, formula, results, shareType = 'shared') {
         // Define formula for top-left cell and share to rest
-        const decoded = colCache.decode(range);
+        const decoded = decode(range);
         const { top, left, bottom, right } = decoded;
         const width = right - left + 1;
-        const masterAddress = colCache.encodeAddress(top, left);
+        const masterAddress = encodeAddress(top, left);
         const isShared = shareType === 'shared';
         // work out result accessor
         let getResult;

@@ -1,4 +1,4 @@
-import _ from "../../../utils/under-dash.js";
+// import  from "../../../utils/under-dash.js";
 import BaseXform from "../base-xform.js";
 function booleanToXml(model) {
     return model ? '1' : undefined;
@@ -15,7 +15,7 @@ class PrintOptionsXform extends BaseXform {
                 horizontalCentered: booleanToXml(model.horizontalCentered),
                 verticalCentered: booleanToXml(model.verticalCentered),
             };
-            if (_.some(attributes, value => value !== undefined)) {
+            if (some(attributes, value => value !== undefined)) {
                 xmlStream.leafNode(this.tag, attributes);
             }
         }

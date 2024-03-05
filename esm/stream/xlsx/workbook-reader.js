@@ -1,7 +1,7 @@
-import events from "events";
-import { PassThrough, Readable } from "node:stream";
-import * as unzip from "unzipper";
-import * as tmp from "tmp";
+import { EventEmitter } from "node:events";
+// import { PassThrough, Readable } from "node:stream";
+import {Parse as unzip} from "unzipper";
+import {setGracefulCleanup} from "tmp";
 import iterateStream from "../../utils/iterate-stream.js";
 import parseSax from "../../utils/parse-sax.js";
 import StyleManager from "../../xlsx/xform/style/styles-xform.js";
@@ -10,8 +10,7 @@ import RelationshipsXform from "../../xlsx/xform/core/relationships-xform.js";
 import WorksheetReader from "./worksheet-reader.js";
 import HyperlinkReader from "./hyperlink-reader.js";
 // const fs = require('fs');
-const { EventEmitter } = events;
-tmp.setGracefulCleanup();
+setGracefulCleanup();
 class WorkbookReader extends EventEmitter {
     constructor(input, options = {}) {
         super();
@@ -70,7 +69,7 @@ class WorkbookReader extends EventEmitter {
         if (options)
             this.options = options;
         const stream = (this.stream = this._getStream(input || this.input));
-        const zip = unzip.Parse({ forceStream: true });
+        const zip = unzip({ forceStream: true });
         stream.pipe(zip);
         // worksheets, deferred for parsing after shared strings reading
         const waitingWorkSheets = [];
@@ -302,13 +301,13 @@ class WorkbookReader extends EventEmitter {
             yield { eventType: 'hyperlinks', value: hyperlinksReader };
         }
     }
+    // for reference - these are the valid values for options
+    static Options = {
+        worksheets: ['emit', 'ignore'],
+        sharedStrings: ['cache', 'emit', 'ignore'],
+        hyperlinks: ['cache', 'emit', 'ignore'],
+        styles: ['cache', 'ignore'],
+        entries: ['emit', 'ignore'],
+    };
 }
-// for reference - these are the valid values for options
-WorkbookReader.Options = {
-    worksheets: ['emit', 'ignore'],
-    sharedStrings: ['cache', 'emit', 'ignore'],
-    hyperlinks: ['cache', 'emit', 'ignore'],
-    styles: ['cache', 'ignore'],
-    entries: ['emit', 'ignore'],
-};
 export default WorkbookReader;

@@ -1,4 +1,4 @@
-import _ from "../utils/under-dash.js";
+import {deepMerge} from "../utils/under-dash.js";
 class Note {
     constructor(note) {
         this.note = note;
@@ -26,7 +26,7 @@ class Note {
                 break;
         }
         // Suitable for all cell comments
-        return _.deepMerge({}, Note.DEFAULT_CONFIGS, value);
+        return deepMerge({}, Note.DEFAULT_CONFIGS, value);
     }
     set model(value) {
         const { note } = value;

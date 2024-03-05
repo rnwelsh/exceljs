@@ -1,38 +1,38 @@
 import { dateToExcel, excelToDate, xmlDecode, isDateFmt } from "../../../utils/utils.js";
 import BaseXform from "../base-xform.js";
 import Range from "../../../doc/range.js";
-import Enums from "../../../doc/enums.js";
+import {ValueType} from "../../../doc/enums.js";
 import RichTextXform from "../strings/rich-text-xform.js";
 function getValueType(v) {
     if (v === null || v === undefined) {
-        return Enums.ValueType.Null;
+        return ValueType.Null;
     }
     if (v instanceof String || typeof v === 'string') {
-        return Enums.ValueType.String;
+        return ValueType.String;
     }
     if (typeof v === 'number') {
-        return Enums.ValueType.Number;
+        return ValueType.Number;
     }
     if (typeof v === 'boolean') {
-        return Enums.ValueType.Boolean;
+        return ValueType.Boolean;
     }
     if (v instanceof Date) {
-        return Enums.ValueType.Date;
+        return ValueType.Date;
     }
     if (v.text && v.hyperlink) {
-        return Enums.ValueType.Hyperlink;
+        return ValueType.Hyperlink;
     }
     if (v.formula) {
-        return Enums.ValueType.Formula;
+        return ValueType.Formula;
     }
     if (v.error) {
-        return Enums.ValueType.Error;
+        return ValueType.Error;
     }
     throw new Error('I could not understand type of value');
 }
 function getEffectiveCellType(cell) {
     switch (cell.type) {
-        case Enums.ValueType.Formula:
+        case ValueType.Formula:
             return getValueType(cell.result);
         default:
             return cell.type;
@@ -55,18 +55,18 @@ class CellXform extends BaseXform {
             options.comments.push({ ...model.comment, ref: model.address });
         }
         switch (model.type) {
-            case Enums.ValueType.String:
-            case Enums.ValueType.RichText:
+            case ValueType.String:
+            case ValueType.RichText:
                 if (options.sharedStrings) {
                     model.ssId = options.sharedStrings.add(model.value);
                 }
                 break;
-            case Enums.ValueType.Date:
+            case ValueType.Date:
                 if (options.date1904) {
                     model.date1904 = true;
                 }
                 break;
-            case Enums.ValueType.Hyperlink:
+            case ValueType.Hyperlink:
                 if (options.sharedStrings && model.text !== undefined && model.text !== null) {
                     model.ssId = options.sharedStrings.add(model.text);
                 }
@@ -76,10 +76,10 @@ class CellXform extends BaseXform {
                     tooltip: model.tooltip,
                 });
                 break;
-            case Enums.ValueType.Merge:
+            case ValueType.Merge:
                 options.merges.add(model);
                 break;
-            case Enums.ValueType.Formula:
+            case ValueType.Formula:
                 if (options.date1904) {
                     // in case valueType is date
                     model.date1904 = true;
@@ -136,41 +136,41 @@ class CellXform extends BaseXform {
                 break;
         }
         switch (getValueType(model.result)) {
-            case Enums.ValueType.Null: // ?
+            case ValueType.Null: // ?
                 xmlStream.leafNode('f', attrs, model.formula);
                 break;
-            case Enums.ValueType.String:
+            case ValueType.String:
                 // oddly, formula results don't ever use shared strings
                 xmlStream.addAttribute('t', 'str');
                 xmlStream.leafNode('f', attrs, model.formula);
                 xmlStream.leafNode('v', null, model.result);
                 break;
-            case Enums.ValueType.Number:
+            case ValueType.Number:
                 xmlStream.leafNode('f', attrs, model.formula);
                 xmlStream.leafNode('v', null, model.result);
                 break;
-            case Enums.ValueType.Boolean:
+            case ValueType.Boolean:
                 xmlStream.addAttribute('t', 'b');
                 xmlStream.leafNode('f', attrs, model.formula);
                 xmlStream.leafNode('v', null, model.result ? 1 : 0);
                 break;
-            case Enums.ValueType.Error:
+            case ValueType.Error:
                 xmlStream.addAttribute('t', 'e');
                 xmlStream.leafNode('f', attrs, model.formula);
                 xmlStream.leafNode('v', null, model.result.error);
                 break;
-            case Enums.ValueType.Date:
+            case ValueType.Date:
                 xmlStream.leafNode('f', attrs, model.formula);
                 xmlStream.leafNode('v', null, dateToExcel(model.result, model.date1904));
                 break;
-            // case Enums.ValueType.Hyperlink: // ??
-            // case Enums.ValueType.Formula:
+            // case ValueType.Hyperlink: // ??
+            // case ValueType.Formula:
             default:
                 throw new Error('I could not understand type of value');
         }
     }
     render(xmlStream, model) {
-        if (model.type === Enums.ValueType.Null && !model.styleId) {
+        if (model.type === ValueType.Null && !model.styleId) {
             // if null and no style, exit
             return;
         }
@@ -180,21 +180,21 @@ class CellXform extends BaseXform {
             xmlStream.addAttribute('s', model.styleId);
         }
         switch (model.type) {
-            case Enums.ValueType.Null:
+            case ValueType.Null:
                 break;
-            case Enums.ValueType.Number:
+            case ValueType.Number:
                 xmlStream.leafNode('v', null, model.value);
                 break;
-            case Enums.ValueType.Boolean:
+            case ValueType.Boolean:
                 xmlStream.addAttribute('t', 'b');
                 xmlStream.leafNode('v', null, model.value ? '1' : '0');
                 break;
-            case Enums.ValueType.Error:
+            case ValueType.Error:
                 xmlStream.addAttribute('t', 'e');
                 xmlStream.leafNode('v', null, model.value.error);
                 break;
-            case Enums.ValueType.String:
-            case Enums.ValueType.RichText:
+            case ValueType.String:
+            case ValueType.RichText:
                 if (model.ssId !== undefined) {
                     xmlStream.addAttribute('t', 's');
                     xmlStream.leafNode('v', null, model.ssId);
@@ -212,10 +212,10 @@ class CellXform extends BaseXform {
                     xmlStream.leafNode('v', null, model.value);
                 }
                 break;
-            case Enums.ValueType.Date:
+            case ValueType.Date:
                 xmlStream.leafNode('v', null, dateToExcel(model.value, model.date1904));
                 break;
-            case Enums.ValueType.Hyperlink:
+            case ValueType.Hyperlink:
                 if (model.ssId !== undefined) {
                     xmlStream.addAttribute('t', 's');
                     xmlStream.leafNode('v', null, model.ssId);
@@ -225,10 +225,10 @@ class CellXform extends BaseXform {
                     xmlStream.leafNode('v', null, model.text);
                 }
                 break;
-            case Enums.ValueType.Formula:
+            case ValueType.Formula:
                 this.renderFormula(xmlStream, model);
                 break;
-            case Enums.ValueType.Merge:
+            case ValueType.Merge:
                 // nothing to add
                 break;
             default:
@@ -243,7 +243,7 @@ class CellXform extends BaseXform {
         }
         switch (node.name) {
             case 'c':
-                // const address = colCache.decodeAddress(node.attributes.r);
+                // const address = col ache.decodeAddress(node.attributes.r);
                 this.model = {
                     address: node.attributes.r,
                 };
@@ -302,7 +302,7 @@ class CellXform extends BaseXform {
                 const { model } = this;
                 // first guess on cell type
                 if (model.formula || model.shareType) {
-                    model.type = Enums.ValueType.Formula;
+                    model.type = ValueType.Formula;
                     if (model.value) {
                         if (this.t === 'str') {
                             model.result = xmlDecode(model.value);
@@ -322,35 +322,35 @@ class CellXform extends BaseXform {
                 else if (model.value !== undefined) {
                     switch (this.t) {
                         case 's':
-                            model.type = Enums.ValueType.String;
+                            model.type = ValueType.String;
                             model.value = parseInt(model.value, 10);
                             break;
                         case 'str':
-                            model.type = Enums.ValueType.String;
+                            model.type = ValueType.String;
                             model.value = xmlDecode(model.value);
                             break;
                         case 'inlineStr':
-                            model.type = Enums.ValueType.String;
+                            model.type = ValueType.String;
                             break;
                         case 'b':
-                            model.type = Enums.ValueType.Boolean;
+                            model.type = ValueType.Boolean;
                             model.value = parseInt(model.value, 10) !== 0;
                             break;
                         case 'e':
-                            model.type = Enums.ValueType.Error;
+                            model.type = ValueType.Error;
                             model.value = { error: model.value };
                             break;
                         default:
-                            model.type = Enums.ValueType.Number;
+                            model.type = ValueType.Number;
                             model.value = parseFloat(model.value);
                             break;
                     }
                 }
                 else if (model.styleId) {
-                    model.type = Enums.ValueType.Null;
+                    model.type = ValueType.Null;
                 }
                 else {
-                    model.type = Enums.ValueType.Merge;
+                    model.type = ValueType.Merge;
                 }
                 return false;
             }
@@ -390,23 +390,23 @@ class CellXform extends BaseXform {
             model.styleId = undefined;
         }
         switch (model.type) {
-            case Enums.ValueType.String:
+            case ValueType.String:
                 if (typeof model.value === 'number') {
                     if (options.sharedStrings) {
                         model.value = options.sharedStrings.getString(model.value);
                     }
                 }
                 if (model.value.richText) {
-                    model.type = Enums.ValueType.RichText;
+                    model.type = ValueType.RichText;
                 }
                 break;
-            case Enums.ValueType.Number:
+            case ValueType.Number:
                 if (style && isDateFmt(style.numFmt)) {
-                    model.type = Enums.ValueType.Date;
+                    model.type = ValueType.Date;
                     model.value = excelToDate(model.value, options.date1904);
                 }
                 break;
-            case Enums.ValueType.Formula:
+            case ValueType.Formula:
                 if (model.result !== undefined && style && isDateFmt(style.numFmt)) {
                     model.result = excelToDate(model.result, options.date1904);
                 }
@@ -429,7 +429,7 @@ class CellXform extends BaseXform {
         // look for hyperlink
         const hyperlink = options.hyperlinkMap[model.address];
         if (hyperlink) {
-            if (model.type === Enums.ValueType.Formula) {
+            if (model.type === ValueType.Formula) {
                 model.text = model.result;
                 model.result = undefined;
             }
@@ -437,7 +437,7 @@ class CellXform extends BaseXform {
                 model.text = model.value;
                 model.value = undefined;
             }
-            model.type = Enums.ValueType.Hyperlink;
+            model.type = ValueType.Hyperlink;
             model.hyperlink = hyperlink;
         }
         const comment = options.commentsMap && options.commentsMap[model.address];

@@ -1,12 +1,11 @@
-import events from "events";
+import { EventEmitter } from "node:events";
 import parseSax from "../../utils/parse-sax.js";
-import _ from "../../utils/under-dash.js";
+import {each} from "../../utils/under-dash.js";
 import { xmlDecode, excelToDate, isDateFmt } from "../../utils/utils.js";
-import colCache from "../../utils/col-cache.js";
+import {l2n,decodeAddress} from "../../utils/col-cache.js";
 import Dimensions from "../../doc/range.js";
 import Row from "../../doc/row.js";
 import Column from "../../doc/column.js";
-const { EventEmitter } = events;
 class WorksheetReader extends EventEmitter {
     constructor({ workbook, id, iterator, options }) {
         super();
@@ -47,7 +46,7 @@ class WorksheetReader extends EventEmitter {
                 return col;
             }
             // otherise, assume letter
-            c = colCache.l2n(c);
+            c = l2n(c);
         }
         if (!this._columns) {
             this._columns = [];
@@ -70,7 +69,7 @@ class WorksheetReader extends EventEmitter {
         delete this._keys[key];
     }
     eachColumnKey(f) {
-        _.each(this._keys, f);
+        each(this._keys, f);
     }
     async read() {
         try {
@@ -255,7 +254,7 @@ class WorksheetReader extends EventEmitter {
                                 break;
                             case 'c':
                                 if (row && c) {
-                                    const address = colCache.decodeAddress(c.ref);
+                                    const address = decodeAddress(c.ref);
                                     const cell = row.getCell(address.col);
                                     if (c.s) {
                                         const style = styles.getStyleModel(c.s);

@@ -1,4 +1,4 @@
-import colCache from "../../../utils/col-cache.js";
+import {getAddress} from "../../../utils/col-cache.js";
 import BaseXform from "../base-xform.js";
 const VIEW_STATES = {
     frozen: 'frozen',
@@ -44,7 +44,7 @@ class SheetViewXform extends BaseXform {
             case 'frozen':
                 xSplit = model.xSplit || 0;
                 ySplit = model.ySplit || 0;
-                topLeftCell = model.topLeftCell || colCache.getAddress(ySplit + 1, xSplit + 1).address;
+                topLeftCell = model.topLeftCell || getAddress(ySplit + 1, xSplit + 1).address;
                 activePane =
                     (model.xSplit && model.ySplit && 'bottomRight') ||
                         (model.xSplit && 'topRight') ||

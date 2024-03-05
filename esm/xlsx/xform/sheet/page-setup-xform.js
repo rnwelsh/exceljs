@@ -1,4 +1,4 @@
-import _ from "../../../utils/under-dash.js";
+import {some} from "../../../utils/under-dash.js";
 import BaseXform from "../base-xform.js";
 function booleanToXml(model) {
     return model ? '1' : undefined;
@@ -57,7 +57,7 @@ class PageSetupXform extends BaseXform {
                 usePrinterDefaults: booleanToXml(model.usePrinterDefaults),
                 copies: model.copies,
             };
-            if (_.some(attributes, value => value !== undefined)) {
+            if (some(attributes, value => value !== undefined)) {
                 xmlStream.leafNode(this.tag, attributes);
             }
         }
