@@ -1,5 +1,6 @@
 // const fs = require('fs');
 // useful stuff
+/*
 export const inherits = function (cls, superCtor, statics, prototype) {
     cls.super_ = superCtor;
     if (!prototype) {
@@ -26,6 +27,7 @@ export const inherits = function (cls, superCtor, statics, prototype) {
     }
     cls.prototype = Object.create(superCtor.prototype, properties);
 };
+*/
 // eslint-disable-next-line no-control-regex
 export const xmlDecodeRegex = /[<>&'"\x7F\x00-\x08\x0B-\x0C\x0E-\x1F]/;
 // const utils ={    export con st nop = ()=> { }

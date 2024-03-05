@@ -1,10 +1,10 @@
 import JSZip from "jszip";
 import { PassThrough } from "node:stream";
-import ZipStream from "../utils/zip-stream.js";
+// import ZipStream from "../utils/zip-stream.js";
 import StreamBuf from "../utils/stream-buf.js";
 // import {} from "../utils/utils.js";
 import XmlStream from "../utils/xml-stream.js";
-import { bufferToString } from "../utils/browser-buffer-decode.js";
+// import { bufferToString } from "../utils/browser-buffer-decode.js";
 import StylesXform from "./xform/style/styles-xform.js";
 import CoreXform from "./xform/core/core-xform.js";
 import SharedStringsXform from "./xform/strings/shared-strings-xform.js";
@@ -208,24 +208,24 @@ export default class {
             entry.pipe(stream);
         });
     }
-    /**
-     * @deprecated since version 4.0. You should use `#read` instead. Please follow upgrade instruction: https://github.com/exceljs/exceljs/blob/master/UPGRADE-4.0.md
-     */
-    createInputStream() {
-        throw new Error('`XLSX#createInputStream` is deprecated. You should use `XLSX#read` instead. This method will be removed in version 5.0. Please follow upgrade instruction: https://github.com/exceljs/exceljs/blob/master/UPGRADE-4.0.md');
-    }
-    async read(stream, options) {
-        // TODO: Remove once node v8 is deprecated
-        // Detect and upgrade old streams
-        if (!stream[Symbol.asyncIterator] && stream.pipe) {
-            stream = stream.pipe(new PassThrough());
-        }
-        const chunks = [];
-        for await (const chunk of stream) {
-            chunks.push(chunk);
-        }
-        return this.load(Buffer.concat(chunks), options);
-    }
+    // /**
+    //  * @deprecated since version 4.0. You should use `#read` instead. Please follow upgrade instruction: https://github.com/exceljs/exceljs/blob/master/UPGRADE-4.0.md
+    //  */
+    // createInputStream() {
+    //     throw new Error('`XLSX#createInputStream` is deprecated. You should use `XLSX#read` instead. This method will be removed in version 5.0. Please follow upgrade instruction: https://github.com/exceljs/exceljs/blob/master/UPGRADE-4.0.md');
+    // }
+    // async read(stream, options) {
+    //     // TODO: Remove once node v8 is deprecated
+    //     // Detect and upgrade old streams
+    //     if (!stream[Symbol.asyncIterator] && stream.pipe) {
+    //         stream = stream.pipe(new PassThrough());
+    //     }
+    //     const chunks = [];
+    //     for await (const chunk of stream) {
+    //         chunks.push(chunk);
+    //     }
+    //     return this.load(Buffer.concat(chunks), options);
+    // }
     async load(data, options) {
         let buffer;
         if (options && options.base64) {
@@ -632,27 +632,27 @@ export default class {
         });
         // TODO: workbook drawing list
     }
-    async write(stream, options) {
-        options = options || {};
-        const { model } = this.workbook;
-        const zip = new ZipStream.ZipWriter(options.zip);
-        zip.pipe(stream);
-        this.prepareModel(model, options);
-        // render
-        await this.addContentTypes(zip, model);
-        await this.addOfficeRels(zip, model);
-        await this.addWorkbookRels(zip, model);
-        await this.addWorksheets(zip, model);
-        await this.addSharedStrings(zip, model); // always after worksheets
-        await this.addDrawings(zip, model);
-        await this.addTables(zip, model);
-        await this.addPivotTables(zip, model);
-        await Promise.all([this.addThemes(zip, model), this.addStyles(zip, model)]);
-        await this.addMedia(zip, model);
-        await Promise.all([this.addApp(zip, model), this.addCore(zip, model)]);
-        await this.addWorkbook(zip, model);
-        return this._finalize(zip);
-    }
+    // async write(stream, options) {
+    //     options = options || {};
+    //     const { model } = this.workbook;
+    //     const zip = new ZipStream.ZipWriter(options.zip);
+    //     zip.pipe(stream);
+    //     this.prepareModel(model, options);
+    //     // render
+    //     await this.addContentTypes(zip, model);
+    //     await this.addOfficeRels(zip, model);
+    //     await this.addWorkbookRels(zip, model);
+    //     await this.addWorksheets(zip, model);
+    //     await this.addSharedStrings(zip, model); // always after worksheets
+    //     await this.addDrawings(zip, model);
+    //     await this.addTables(zip, model);
+    //     await this.addPivotTables(zip, model);
+    //     await Promise.all([this.addThemes(zip, model), this.addStyles(zip, model)]);
+    //     await this.addMedia(zip, model);
+    //     await Promise.all([this.addApp(zip, model), this.addCore(zip, model)]);
+    //     await this.addWorkbook(zip, model);
+    //     return this._finalize(zip);
+    // }
     // writeFile(filename, options) {
     //   const stream = fs.createWriteStream(filename);
     //   return new Promise((resolve, reject) => {

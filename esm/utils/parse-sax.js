@@ -1,12 +1,12 @@
 import { SaxesParser } from "saxes";
-import { PassThrough } from "node:stream";
+// import { PassThrough } from "node:stream";
 import { bufferToString } from "./browser-buffer-decode.js";
 export default (async function* (iterable) {
     // TODO: Remove once node v8 is deprecated
     // Detect and upgrade old streams
-    if (iterable.pipe && !iterable[Symbol.asyncIterator]) {
-        iterable = iterable.pipe(new PassThrough());
-    }
+    // if (iterable.pipe && !iterable[Symbol.asyncIterator]) {
+    //     iterable = iterable.pipe(new PassThrough());
+    // }
     const saxesParser = new SaxesParser();
     let error;
     saxesParser.on('error', err => {

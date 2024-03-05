@@ -1,5 +1,4 @@
 import RichTextXform from "../strings/rich-text-xform.js";
-import { inherits } from "../../../utils/utils.js";
 import BaseXform from "../base-xform.js";
 /**
   <comment ref="B1" authorId="0">
@@ -24,20 +23,23 @@ import BaseXform from "../base-xform.js";
     </text>
   </comment>
  */
-const CommentXform = (function (model) {
+class CommentXform extends BaseXform {
+  constructor(model){
+    super()
     this.model = model;
-});
-inherits(CommentXform, BaseXform, {
-    get tag() {
+  }
+
+  
+    static get tag() {
         return 'r';
-    },
-    get richTextXform() {
+    }
+    static get richTextXform() {
         if (!this._richTextXform) {
             this._richTextXform = new RichTextXform();
         }
         return this._richTextXform;
-    },
-    render(xmlStream, model) {
+    }
+    static render(xmlStream, model) {
         model = model || this.model;
         xmlStream.openNode('comment', {
             ref: model.ref,
@@ -51,8 +53,8 @@ inherits(CommentXform, BaseXform, {
         }
         xmlStream.closeNode();
         xmlStream.closeNode();
-    },
-    parseOpen(node) {
+    }
+    static parseOpen(node) {
         if (this.parser) {
             this.parser.parseOpen(node);
             return true;
@@ -74,13 +76,13 @@ inherits(CommentXform, BaseXform, {
             default:
                 return false;
         }
-    },
-    parseText(text) {
+    }
+    static parseText(text) {
         if (this.parser) {
             this.parser.parseText(text);
         }
-    },
-    parseClose(name) {
+    }
+    static parseClose(name) {
         switch (name) {
             case 'comment':
                 return false;
@@ -94,6 +96,6 @@ inherits(CommentXform, BaseXform, {
                 }
                 return true;
         }
-    },
-});
+    }
+}
 export default CommentXform;
