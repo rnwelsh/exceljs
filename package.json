@@ -15,8 +15,7 @@
   "engines": {
     "node": ">=8.3.0"
   },
-  "main": "./excel.js",
-  "browser": "./dist/exceljs.min.js",
+  "main": "./lib/index.js",
   "types": "./index.d.ts",
   "files": [
     "dist",
@@ -32,18 +31,15 @@
     "clean-build": "npm run clean && npm run build",
     "clean": "pwsh -command config/clean.ps1",
     "build": "grunt build",
-    "install-build": "npm install && grunt build"
+    "esbuild": "esbuild ./lib/index.js --outfile=./dist/exceljs.js --platform=node --target=esnext --bundle"
   },
   "dependencies": {
     "archiver": "^5.0.0",
     "dayjs": "^1.8.34",
-    "fast-csv": "^4.3.1",
     "jszip": "^3.10.1",
-    "readable-stream": "^3.6.0",
     "saxes": "^5.0.1",
     "tmp": "^0.2.0",
     "unzipper": "^0.10.11",
-    "uuid": "^8.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.10.5",

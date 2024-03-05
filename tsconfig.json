@@ -4,8 +4,7 @@
     "target": "ESNext",
     "sourceMap": true,
     "types": [
-      "node",
-      "mocha"
+      "node"
     ]
   },
   "exclude": [
