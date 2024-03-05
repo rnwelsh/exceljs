@@ -24,12 +24,10 @@ import BaseXform from "../base-xform.js";
   </comment>
  */
 class CommentXform extends BaseXform {
-  constructor(model){
-    super()
-    this.model = model;
-  }
-
-  
+    constructor(model) {
+        super();
+        this.model = model;
+    }
     static get tag() {
         return 'r';
     }

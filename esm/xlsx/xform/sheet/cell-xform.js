@@ -1,7 +1,7 @@
 import { dateToExcel, excelToDate, xmlDecode, isDateFmt } from "../../../utils/utils.js";
 import BaseXform from "../base-xform.js";
 import Range from "../../../doc/range.js";
-import {ValueType} from "../../../doc/enums.js";
+import { ValueType } from "../../../doc/enums.js";
 import RichTextXform from "../strings/rich-text-xform.js";
 function getValueType(v) {
     if (v === null || v === undefined) {

@@ -1,5 +1,5 @@
 import BaseXform from "../base-xform.js";
-import {decodeEx} from "../../../utils/col-cache.js";
+import { decodeEx } from "../../../utils/col-cache.js";
 class DefinedNamesXform extends BaseXform {
     render(xmlStream, model) {
         // <definedNames>

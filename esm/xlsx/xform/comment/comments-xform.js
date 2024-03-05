@@ -68,14 +68,13 @@ import cx from "./comment-xform.js";
 //         }
 //     },
 // });
-
 class CommentXform extends BaseXform {
-  map = {
-    comment: new cx(),
-  }
-  static COMMENTS_ATTRIBUTES= {
-    xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
-  }
+    map = {
+        comment: new cx(),
+    };
+    static COMMENTS_ATTRIBUTES = {
+        xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+    };
     render(xmlStream, model) {
         model = model || this.model;
         xmlStream.openXml(XmlStream.StdDocAttributes);
@@ -132,6 +131,5 @@ class CommentXform extends BaseXform {
                 return true;
         }
     }
-
 }
 export default CommentsXform;

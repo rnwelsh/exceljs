@@ -1,5 +1,5 @@
-import {each} from "./under-dash.js";
-import {decodeEx,n2l} from "./col-cache.js";
+import { each } from "./under-dash.js";
+import { decodeEx, n2l } from "./col-cache.js";
 class CellMatrix {
     constructor(template) {
         this.template = template;

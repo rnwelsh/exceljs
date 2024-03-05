@@ -1,4 +1,4 @@
-import {each} from "../../../utils/under-dash.js";
+import { each } from "../../../utils/under-dash.js";
 import defaultNumFormats from "../../defaultnumformats.js";
 import BaseXform from "../base-xform.js";
 function hashDefaultFormats() {

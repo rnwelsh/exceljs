@@ -1,6 +1,6 @@
-import {map,each} from "../../../utils/under-dash.js";
+import { map, each } from "../../../utils/under-dash.js";
 import Range from "../../../doc/range.js";
-import {decode,encodeAddress} from "../../../utils/col-cache.js";
+import { decode, encodeAddress } from "../../../utils/col-cache.js";
 class Merges {
     constructor() {
         // optional mergeCells is array of ranges (like the xml)

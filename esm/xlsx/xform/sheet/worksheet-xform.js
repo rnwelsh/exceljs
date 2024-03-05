@@ -1,5 +1,5 @@
-import {each} from "../../../utils/under-dash.js";
-import {decodeAddress} from "../../../utils/col-cache.js";
+import { each } from "../../../utils/under-dash.js";
+import { decodeAddress } from "../../../utils/col-cache.js";
 import XmlStream from "../../../utils/xml-stream.js";
 import RelType from "../../rel-type.js";
 import Merges from "./merges.js";

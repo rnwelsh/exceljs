@@ -1,4 +1,4 @@
-import {decodeAddress} from "../utils/col-cache.js";
+import { decodeAddress } from "../utils/col-cache.js";
 'use strict';
 class Anchor {
     constructor(worksheet, address, offset = 0) {

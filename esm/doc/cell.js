@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { validateAddress } from "../utils/col-cache.js";
 import { escapeHtml } from "../utils/under-dash.js";
-import {ValueType,FormulaType} from "./enums.js";
+import { ValueType, FormulaType } from "./enums.js";
 import { slideFormula } from "../utils/shared-formula.js";
 import Note from "./note.js";
 // Cell requirements

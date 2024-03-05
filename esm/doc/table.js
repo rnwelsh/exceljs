@@ -1,4 +1,4 @@
-import {decodeAddress,encode} from "../utils/col-cache.js";
+import { decodeAddress, encode } from "../utils/col-cache.js";
 class Column {
     // wrapper around column model, allowing access and manipulation
     constructor(table, column, index) {

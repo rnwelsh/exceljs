@@ -1,6 +1,6 @@
 import XmlStream from "../../utils/xml-stream.js";
 import RelType from "../../xlsx/rel-type.js";
-import {decodeAddress} from "../../utils/col-cache.js";
+import { decodeAddress } from "../../utils/col-cache.js";
 import CommentXform from "../../xlsx/xform/comment/comment-xform.js";
 import VmlShapeXform from "../../xlsx/xform/comment/vml-shape-xform.js";
 export default class SheetCommentsWriter {
@@ -99,4 +99,3 @@ export default class SheetCommentsWriter {
         }
     }
 }
-

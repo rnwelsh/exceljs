@@ -1,5 +1,5 @@
 import { some } from "../utils/under-dash.js";
-import {encodeAddress,decodeAddress,l2n} from "../utils/col-cache.js";
+import { encodeAddress, decodeAddress, l2n } from "../utils/col-cache.js";
 import Cell from "./cell.js";
 'use strict';
 class Row {

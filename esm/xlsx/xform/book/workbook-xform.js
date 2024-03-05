@@ -1,5 +1,5 @@
-import {each} from "../../../utils/under-dash.js";
-import {decodeEx} from "../../../utils/col-cache.js";
+import { each } from "../../../utils/under-dash.js";
+import { decodeEx } from "../../../utils/col-cache.js";
 import XmlStream from "../../../utils/xml-stream.js";
 import BaseXform from "../base-xform.js";
 import StaticXform from "../static-xform.js";

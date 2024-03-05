@@ -1,4 +1,4 @@
-import {getAddress} from "../../../utils/col-cache.js";
+import { getAddress } from "../../../utils/col-cache.js";
 import BaseXform from "../base-xform.js";
 class AutoFilterXform extends BaseXform {
     get tag() {

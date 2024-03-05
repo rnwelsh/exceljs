@@ -1,4 +1,4 @@
-import {ValueType} from "../../../doc/enums.js";
+import { ValueType } from "../../../doc/enums.js";
 import XmlStream from "../../../utils/xml-stream.js";
 import BaseXform from "../base-xform.js";
 import StaticXform from "../static-xform.js";
@@ -365,14 +365,14 @@ export default class StylesXform extends BaseXform {
         }
         return index;
     }
-    static STYLESHEET_ATTRIBUTES= {
+    static STYLESHEET_ATTRIBUTES = {
         xmlns: 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
         'xmlns:mc': 'http://schemas.openxmlformats.org/markup-compatibility/2006',
         'mc:Ignorable': 'x14ac x16r2',
         'xmlns:x14ac': 'http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac',
         'xmlns:x16r2': 'http://schemas.microsoft.com/office/spreadsheetml/2015/02/main',
-    }
-    static STATIC_XFORMS= {
+    };
+    static STATIC_XFORMS = {
         cellStyles: new StaticXform({
             tag: 'cellStyles',
             $: { count: 1 },
@@ -404,7 +404,7 @@ export default class StylesXform extends BaseXform {
                 },
             ],
         }),
-    }
+    };
 }
 // the stylemanager mock acts like StyleManager except that it always returns 0 or {}
 // class StylesXformMock extends StylesXform {
@@ -456,4 +456,3 @@ export default class StylesXform extends BaseXform {
 //     }
 // }
 // StylesXform.Mock = StylesXformMock;
-

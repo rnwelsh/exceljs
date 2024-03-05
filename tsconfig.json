@@ -16,7 +16,7 @@
     
     // "outFile": "./dist/exceljs.tsc.js",
     "types": [
-      "node"
+      // "node"
     ],
     "allowArbitraryExtensions": false,
     "allowUmdGlobalAccess": true,
@@ -126,6 +126,5 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "./esm/**/*"
-, "dist/exceljs.js"  ]
+    "./esm/**/*"  ]
 }

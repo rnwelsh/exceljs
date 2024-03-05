@@ -1,9 +1,9 @@
 import { each, some } from "../utils/under-dash.js";
-import {getAddress,l2n,encodeAddress,decode} from "../utils/col-cache.js";
+import { getAddress, l2n, encodeAddress, decode } from "../utils/col-cache.js";
 import Range from "./range.js";
 import Row from "./row.js";
 import Column from "./column.js";
-import {ValueType} from "./enums.js";
+import { ValueType } from "./enums.js";
 import Image from "./image.js";
 import Table from "./table.js";
 import DataValidations from "./data-validations.js";

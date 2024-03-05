@@ -1,4 +1,4 @@
-import {getAddress} from "../../../utils/col-cache.js";
+import { getAddress } from "../../../utils/col-cache.js";
 import BaseXform from "../base-xform.js";
 const VIEW_STATES = {
     frozen: 'frozen',

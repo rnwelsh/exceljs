@@ -1,11 +1,11 @@
 import events from "events";
 import JSZip from "jszip";
 import StreamBuf from "./stream-buf.js";
-// import { stringToBuffer } from "./browser-buffer-encode.js";
+import { stringToBuffer } from "./browser-buffer-encode.js";
 // =============================================================================
 // The ZipWriter class
 // Packs streamed data into an output zip stream
-class ZipWriter extends events.EventEmitter {
+export class ZipWriter extends events.EventEmitter {
     constructor(options) {
         super();
         this.options = Object.assign({
@@ -20,11 +20,11 @@ class ZipWriter extends events.EventEmitter {
             this.zip.file(options.name, data, { base64: true });
         }
         else {
-            // https://www.npmjs.com/package/process
-            // if (process.browser && typeof data === 'string') {
-            //     // use TextEncoder in browser
-            //     data = stringToBuffer(data);
-            // }
+            data = stringToBuffer(data);
+            //// https://www.npmjs.com/package/process
+            //// if (process.browser && typeof data === 'string') {
+            ////     // use TextEncoder in browser
+            //// }
             this.zip.file(options.name, data);
         }
     }
@@ -63,7 +63,6 @@ class ZipWriter extends events.EventEmitter {
         return this.stream.wrap(stream);
     }
 }
-export { ZipWriter };
 export default {
     ZipWriter
 };

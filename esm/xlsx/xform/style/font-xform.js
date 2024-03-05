@@ -3,7 +3,7 @@ import BooleanXform from "../simple/boolean-xform.js";
 import IntegerXform from "../simple/integer-xform.js";
 import StringXform from "../simple/string-xform.js";
 import UnderlineXform from "./underline-xform.js";
-import {each} from "../../../utils/under-dash.js";
+import { each } from "../../../utils/under-dash.js";
 import BaseXform from "../base-xform.js";
 'use strict';
 // Font encapsulates translation from font model to xlsx

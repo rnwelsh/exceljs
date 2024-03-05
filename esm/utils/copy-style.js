@@ -11,7 +11,6 @@ const setIfExists = (src, dst, key, nestKeys = []) => {
         dst[key] = oneDepthCopy(src[key], nestKeys);
 };
 const isEmptyObj = obj => Object.keys(obj).length === 0;
-
 export const copyStyle = style => {
     if (!style)
         return style;
@@ -37,4 +36,3 @@ export const copyStyle = style => {
     }
     return copied;
 };
-

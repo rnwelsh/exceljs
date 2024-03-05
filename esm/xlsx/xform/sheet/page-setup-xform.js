@@ -1,4 +1,4 @@
-import {some} from "../../../utils/under-dash.js";
+import { some } from "../../../utils/under-dash.js";
 import BaseXform from "../base-xform.js";
 function booleanToXml(model) {
     return model ? '1' : undefined;

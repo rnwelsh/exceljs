@@ -1,4 +1,4 @@
-import {decode} from "../utils/col-cache.js";
+import { decode } from "../utils/col-cache.js";
 import Anchor from "./anchor.js";
 class Image {
     constructor(worksheet, model) {

@@ -138,7 +138,6 @@ export const isObject = (val) => {
 export const deepMerge = function () {
     const target = arguments[0] || {};
     const { length } = arguments;
-    // eslint-disable-next-line one-var
     let src, clone, copyIsArray;
     function assignValue(val, key) {
         src = target[key];

@@ -1,4 +1,4 @@
-import {ReadingOrder} from "../../../doc/enums.js";
+import { ReadingOrder } from "../../../doc/enums.js";
 import { validInt, parseBoolean } from "../../../utils/utils.js";
 import BaseXform from "../base-xform.js";
 const validation = {

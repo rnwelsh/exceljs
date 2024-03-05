@@ -1,7 +1,7 @@
 import { EventEmitter } from "node:events";
 // import { PassThrough, Readable } from "node:stream";
-import {Parse as unzip} from "unzipper";
-import {setGracefulCleanup} from "tmp";
+import { Parse as unzip } from "unzipper";
+import { setGracefulCleanup } from "tmp";
 import iterateStream from "../../utils/iterate-stream.js";
 import parseSax from "../../utils/parse-sax.js";
 import StyleManager from "../../xlsx/xform/style/styles-xform.js";
@@ -26,15 +26,6 @@ class WorkbookReader extends EventEmitter {
         this.styles = new StyleManager();
         this.styles.init();
     }
-    // _getStream(input) {
-    //   if (input instanceof nodeStream.Readable || input instanceof Readable) {
-    //     return input;
-    //   }
-    //   if (typeof input === 'string') {
-    //     return fs.createReadStream(input);
-    //   }
-    //   throw new Error(`Could not recognise input: ${input}`);
-    // }
     async read(input, options) {
         try {
             for await (const { eventType, value } of this.parse(input, options)) {

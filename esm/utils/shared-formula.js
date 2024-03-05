@@ -1,4 +1,4 @@
-import {decode,l2n,n2l} from "./col-cache.js";
+import { decode, l2n, n2l } from "./col-cache.js";
 // const cellRefRegex = /(([a-z_\-0-9]*)!)?[$]?([a-z]+)[$]?([1-9][0-9]*)/i;
 const replacementCandidateRx = /(([a-z_\-0-9]*)!)?([a-z0-9_$]{2,})([(])?/gi;
 const CRrx = /^([$])?([a-z]+)([$])?([1-9][0-9]*)$/i;

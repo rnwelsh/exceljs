@@ -1,6 +1,6 @@
-import {map,strcmp,keyBy,isEqual} from "../../../utils/under-dash.js";
+import { map, strcmp, keyBy, isEqual } from "../../../utils/under-dash.js";
 import { dateToExcel, excelToDate, parseBoolean } from "../../../utils/utils.js";
-import {encodeAddress,decodeEx} from "../../../utils/col-cache.js";
+import { encodeAddress, decodeEx } from "../../../utils/col-cache.js";
 import BaseXform from "../base-xform.js";
 import Range from "../../../doc/range.js";
 function assign(definedName, attributes, name, defaultValue) {

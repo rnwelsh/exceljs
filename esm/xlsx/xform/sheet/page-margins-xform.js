@@ -1,4 +1,4 @@
-import {some} from "../../../utils/under-dash.js";
+import { some } from "../../../utils/under-dash.js";
 import BaseXform from "../base-xform.js";
 class PageMarginsXform extends BaseXform {
     get tag() {

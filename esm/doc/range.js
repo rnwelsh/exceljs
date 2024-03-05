@@ -1,4 +1,4 @@
-import {decodeAddress,decodeEx,n2l,encodeAddress} from "../utils/col-cache.js";
+import { decodeAddress, decodeEx, n2l, encodeAddress } from "../utils/col-cache.js";
 // used by worksheet to calculate sheet dimensions
 class Range {
     constructor() {

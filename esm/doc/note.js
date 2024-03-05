@@ -1,5 +1,5 @@
-import {deepMerge} from "../utils/under-dash.js";
-class Note {
+import { deepMerge } from "../utils/under-dash.js";
+export default class Note {
     constructor(note) {
         this.note = note;
     }
@@ -43,18 +43,17 @@ class Note {
         note.model = model;
         return note;
     }
+    static DEFAULT_CONFIGS = {
+        note: {
+            margins: {
+                insetmode: 'auto',
+                inset: [0.13, 0.13, 0.25, 0.25],
+            },
+            protection: {
+                locked: 'True',
+                lockText: 'True',
+            },
+            editAs: 'absolute',
+        },
+    };
 }
-Note.DEFAULT_CONFIGS = {
-    note: {
-        margins: {
-            insetmode: 'auto',
-            inset: [0.13, 0.13, 0.25, 0.25],
-        },
-        protection: {
-            locked: 'True',
-            lockText: 'True',
-        },
-        editAs: 'absolute',
-    },
-};
-export default Note;
