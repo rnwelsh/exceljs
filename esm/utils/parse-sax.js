@@ -1,6 +1,6 @@
-import { SaxesParser } from "saxes";
 // import { PassThrough } from "node:stream";
 import { bufferToString } from "./browser-buffer-decode.js";
+const SaxesParser = (await import("saxes")).default;
 export default (async function* (iterable) {
     // TODO: Remove once node v8 is deprecated
     // Detect and upgrade old streams

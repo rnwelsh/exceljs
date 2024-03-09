@@ -7,7 +7,7 @@ class BaseXform {
     // constructor(/* model, name */) {}
     // ============================================================
     // Virtual Interface
-    prepare( /* model, options */) {
+    prepare( model, options ) {
         // optional preparation (mutation) of model so it is ready for write
     }
     render( /* xmlStream, model */) {

@@ -12,7 +12,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "outDir": "./build/",
+    "outDir": "./dist",
+    
     
     // "outFile": "./dist/exceljs.tsc.js",
     "types": [

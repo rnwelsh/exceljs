@@ -15,7 +15,7 @@ class DrawingXform extends BaseXform {
             'xdr:oneCellAnchor': new OneCellAnchorXform(),
         };
     }
-    prepare(model) {
+    prepare(model,opts) {
         model.anchors.forEach((item, index) => {
             item.anchorType = getAnchorType(item);
             const anchor = this.map[item.anchorType];

@@ -1,11 +1,8 @@
 import workbook from "./doc/workbook.js";
-// import modelcontainer from "./doc/modelcontainer.js";
-// import workbookWriter from "./stream/xlsx/workbook-writer.js";
-// import workbookReader from "./stream/xlsx/workbook-reader.js";
-
+import modelcontainer from "./doc/modelcontainer.js";
 
 export const Workbook = workbook
-    // ModelContainer: modelcontainer,
+export const ModelContainer = modelcontainer
 export const ValueType = {
         Null: 0,
         Merge: 1,
@@ -50,11 +47,12 @@ export const ErrorValue = {
         Value: '#VALUE!',
         Num: '#NUM!',
     }
-export default {
-  Workbook,
-  ValueType,
-  FormulaType,
-  RelationshipType,
-  DocumentType,
-  ErrorValue
-}
+// export default {
+//   Workbook,
+//   ModelContainer,
+//   ValueType,
+//   FormulaType,
+//   RelationshipType,
+//   DocumentType,
+//   ErrorValue
+// }

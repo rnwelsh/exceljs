@@ -29,23 +29,27 @@
     "index.d.ts"
   ],
   "scripts": {
-    "clean-build": "npm run clean && npm run build",
     "clean": "pwsh -command config/clean.ps1",
-    "esbundle": "node bundle.js",
-    "tsc": "pwsh -command ./config/clean.ps1 && tsc",
-    "toesm": "~~~cjstoesm lib esm"
+    "rollup": "npm run clean && rollup -c",
+    "tsc": "pwsh -command ./config/clean.ps1 && tsc"
   },
   "dependencies": {
     "archiver": "^7.0.0",
+    "fflate": "^0.8.2",
     "jszip": "^3.10.1",
     "saxes": "^6.0.0",
     "unzipper": "^0.10.14"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.6",
     "@types/rollup": "^0.54.0",
     "cjstoesm": "^2.1.2",
     "esbuild": "^0.20.1",
+    "prettier": "^3.2.5",
     "rollup": "^4.12.0",
+    "tslib": "^2.6.2",
     "typescript": "^5.3.3"
   }
 }
