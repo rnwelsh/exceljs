@@ -10,7 +10,7 @@ import ColXform from "./col-xform.js";
 import DimensionXform from "./dimension-xform.js";
 import HyperlinkXform from "./hyperlink-xform.js";
 import MergeCellXform from "./merge-cell-xform.js";
-import DataValidationsXform from "./data-validations-xform.js";
+// import DataValidationsXform from "./data-validations-xform.js";
 import SheetPropertiesXform from "./sheet-properties-xform.js";
 import SheetFormatPropertiesXform from "./sheet-format-properties-xform.js";
 import SheetViewXform from "./sheet-view-xform.js";
@@ -19,8 +19,8 @@ import PageMarginsXform from "./page-margins-xform.js";
 import PageSetupXform from "./page-setup-xform.js";
 import PrintOptionsXform from "./print-options-xform.js";
 import AutoFilterXform from "./auto-filter-xform.js";
-import PictureXform from "./picture-xform.js";
-import DrawingXform from "./drawing-xform.js";
+// import PictureXform from "./picture-xform.js";
+// import DrawingXform from "./drawing-xform.js";
 import TablePartXform from "./table-part-xform.js";
 import RowBreaksXform from "./row-breaks-xform.js";
 import HeaderFooterXform from "./header-footer-xform.js";
@@ -111,12 +111,12 @@ class WorkSheetXform extends BaseXform {
                 childXform: new HyperlinkXform(),
             }),
             pageMargins: new PageMarginsXform(),
-            dataValidations: new DataValidationsXform(),
+            // dataValidations: new DataValidationsXform(),
             pageSetup: new PageSetupXform(),
             headerFooter: new HeaderFooterXform(),
             printOptions: new PrintOptionsXform(),
-            picture: new PictureXform(),
-            drawing: new DrawingXform(),
+            // picture: new PictureXform(),
+            // drawing: new DrawingXform(),
             sheetProtection: new SheetProtectionXform(),
             tableParts: new ListXform({ tag: 'tableParts', count: true, childXform: new TablePartXform() }),
             conditionalFormatting: new ConditionalFormattingsXform(),
@@ -170,73 +170,73 @@ class WorkSheetXform extends BaseXform {
                 vmlDrawing: `vmlDrawing${model.id}`,
             });
         }
-        const drawingRelsHash = [];
-        let bookImage;
-        model.media.forEach(medium => {
-            if (medium.type === 'background') {
-                const rId = nextRid(rels);
-                bookImage = options.media[medium.imageId];
-                rels.push({
-                    Id: rId,
-                    Type: RelType.Image,
-                    Target: `../media/${bookImage.name}.${bookImage.extension}`,
-                });
-                model.background = {
-                    rId,
-                };
-                model.image = options.media[medium.imageId];
-            }
-            else if (medium.type === 'image') {
-                let { drawing } = model;
-                bookImage = options.media[medium.imageId];
-                if (!drawing) {
-                    drawing = model.drawing = {
-                        rId: nextRid(rels),
-                        name: `drawing${++options.drawingsCount}`,
-                        anchors: [],
-                        rels: [],
-                    };
-                    options.drawings.push(drawing);
-                    rels.push({
-                        Id: drawing.rId,
-                        Type: 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
-                        Target: `../drawings/${drawing.name}.xml`,
-                    });
-                }
-                let rIdImage = this.preImageId === medium.imageId ? drawingRelsHash[medium.imageId] : drawingRelsHash[drawing.rels.length];
-                if (!rIdImage) {
-                    rIdImage = nextRid(drawing.rels);
-                    drawingRelsHash[drawing.rels.length] = rIdImage;
-                    drawing.rels.push({
-                        Id: rIdImage,
-                        Type: 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
-                        Target: `../media/${bookImage.name}.${bookImage.extension}`,
-                    });
-                }
-                const anchor = {
-                    picture: {
-                        rId: rIdImage,
-                    },
-                    range: medium.range,
-                };
-                if (medium.hyperlinks && medium.hyperlinks.hyperlink) {
-                    const rIdHyperLink = nextRid(drawing.rels);
-                    drawingRelsHash[drawing.rels.length] = rIdHyperLink;
-                    anchor.picture.hyperlinks = {
-                        tooltip: medium.hyperlinks.tooltip,
-                        rId: rIdHyperLink,
-                    };
-                    drawing.rels.push({
-                        Id: rIdHyperLink,
-                        Type: RelType.Hyperlink,
-                        Target: medium.hyperlinks.hyperlink,
-                        TargetMode: 'External',
-                    });
-                }
-                this.preImageId = medium.imageId;
-                drawing.anchors.push(anchor);
-            }
-        });
+        // const drawingRelsHash = [];
+        // let bookImage;
+        // model.media.forEach(medium => {
+        //     if (medium.type === 'background') {
+        //         const rId = nextRid(rels);
+        //         bookImage = options.media[medium.imageId];
+        //         rels.push({
+        //             Id: rId,
+        //             Type: RelType.Image,
+        //             Target: `../media/${bookImage.name}.${bookImage.extension}`,
+        //         });
+        //         model.background = {
+        //             rId,
+        //         };
+        //         model.image = options.media[medium.imageId];
+        //     }
+        //     else if (medium.type === 'image') {
+        //         let { drawing } = model;
+        //         bookImage = options.media[medium.imageId];
+        //         if (!drawing) {
+        //             drawing = model.drawing = {
+        //                 rId: nextRid(rels),
+        //                 name: `drawing${++options.drawingsCount}`,
+        //                 anchors: [],
+        //                 rels: [],
+        //             };
+        //             options.drawings.push(drawing);
+        //             rels.push({
+        //                 Id: drawing.rId,
+        //                 Type: 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/drawing',
+        //                 Target: `../drawings/${drawing.name}.xml`,
+        //             });
+        //         }
+        //         let rIdImage = this.preImageId === medium.imageId ? drawingRelsHash[medium.imageId] : drawingRelsHash[drawing.rels.length];
+        //         if (!rIdImage) {
+        //             rIdImage = nextRid(drawing.rels);
+        //             drawingRelsHash[drawing.rels.length] = rIdImage;
+        //             drawing.rels.push({
+        //                 Id: rIdImage,
+        //                 Type: 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/image',
+        //                 Target: `../media/${bookImage.name}.${bookImage.extension}`,
+        //             });
+        //         }
+        //         const anchor = {
+        //             picture: {
+        //                 rId: rIdImage,
+        //             },
+        //             range: medium.range,
+        //         };
+        //         if (medium.hyperlinks && medium.hyperlinks.hyperlink) {
+        //             const rIdHyperLink = nextRid(drawing.rels);
+        //             drawingRelsHash[drawing.rels.length] = rIdHyperLink;
+        //             anchor.picture.hyperlinks = {
+        //                 tooltip: medium.hyperlinks.tooltip,
+        //                 rId: rIdHyperLink,
+        //             };
+        //             drawing.rels.push({
+        //                 Id: rIdHyperLink,
+        //                 Type: RelType.Hyperlink,
+        //                 Target: medium.hyperlinks.hyperlink,
+        //                 TargetMode: 'External',
+        //             });
+        //         }
+        //         this.preImageId = medium.imageId;
+        //         drawing.anchors.push(anchor);
+        //     }
+        // });
         // prepare tables
         model.tables.forEach(table => {
             // relationships
@@ -256,13 +256,13 @@ class WorkSheetXform extends BaseXform {
             });
         });
         // prepare pivot tables
-        if ((model.pivotTables || []).length) {
-            rels.push({
-                Id: nextRid(rels),
-                Type: RelType.PivotTable,
-                Target: '../pivotTables/pivotTable1.xml',
-            });
-        }
+        // if ((model.pivotTables || []).length) {
+        //     rels.push({
+        //         Id: nextRid(rels),
+        //         Type: RelType.PivotTable,
+        //         Target: '../pivotTables/pivotTable1.xml',
+        //     });
+        // }
         // prepare ext items
         this.map.extLst.prepare(model, options);
     }
@@ -307,7 +307,7 @@ class WorkSheetXform extends BaseXform {
         this.map.autoFilter.render(xmlStream, model.autoFilter);
         this.map.mergeCells.render(xmlStream, model.mergeCells);
         this.map.conditionalFormatting.render(xmlStream, model.conditionalFormattings); // Note: must be before dataValidations
-        this.map.dataValidations.render(xmlStream, model.dataValidations);
+        // this.map.dataValidations.render(xmlStream, model.dataValidations);
         // For some reason hyperlinks have to be after the data validations
         this.map.hyperlinks.render(xmlStream, model.hyperlinks);
         this.map.printOptions.render(xmlStream, printOptionsModel); // Note: must be before pageMargins
@@ -315,8 +315,8 @@ class WorkSheetXform extends BaseXform {
         this.map.pageSetup.render(xmlStream, model.pageSetup);
         this.map.headerFooter.render(xmlStream, model.headerFooter);
         this.map.rowBreaks.render(xmlStream, model.rowBreaks);
-        this.map.drawing.render(xmlStream, model.drawing); // Note: must be after rowBreaks
-        this.map.picture.render(xmlStream, model.background); // Note: must be after drawing
+        // this.map.drawing.render(xmlStream, model.drawing); // Note: must be after rowBreaks
+        // this.map.picture.render(xmlStream, model.background); // Note: must be after drawing
         this.map.tableParts.render(xmlStream, model.tables);
         this.map.extLst.render(xmlStream, model);
         if (model.rels) {
@@ -382,13 +382,13 @@ class WorkSheetXform extends BaseXform {
                     rows: this.map.sheetData.model,
                     mergeCells: this.map.mergeCells.model,
                     hyperlinks: this.map.hyperlinks.model,
-                    dataValidations: this.map.dataValidations.model,
+                    // dataValidations: this.map.dataValidations.model,
                     properties,
                     views: this.map.sheetViews.model,
                     pageSetup,
                     headerFooter: this.map.headerFooter.model,
-                    background: this.map.picture.model,
-                    drawing: this.map.drawing.model,
+                    // background: this.map.picture.model,
+                    // drawing: this.map.drawing.model,
                     tables: this.map.tableParts.model,
                     conditionalFormattings,
                 };
@@ -443,36 +443,36 @@ class WorkSheetXform extends BaseXform {
         this.map.sheetData.reconcile(model.rows, options);
         this.map.conditionalFormatting.reconcile(model.conditionalFormattings, options);
         model.media = [];
-        if (model.drawing) {
-            const drawingRel = rels[model.drawing.rId];
-            const match = drawingRel.Target.match(/\/drawings\/([a-zA-Z0-9]+)[.][a-zA-Z]{3,4}$/);
-            if (match) {
-                const drawingName = match[1];
-                const drawing = options.drawings[drawingName];
-                drawing.anchors.forEach(anchor => {
-                    if (anchor.medium) {
-                        const image = {
-                            type: 'image',
-                            imageId: anchor.medium.index,
-                            range: anchor.range,
-                            hyperlinks: anchor.picture.hyperlinks,
-                        };
-                        model.media.push(image);
-                    }
-                });
-            }
-        }
-        const backgroundRel = model.background && rels[model.background.rId];
-        if (backgroundRel) {
-            const target = backgroundRel.Target.split('/media/')[1];
-            const imageId = options.mediaIndex && options.mediaIndex[target];
-            if (imageId !== undefined) {
-                model.media.push({
-                    type: 'background',
-                    imageId,
-                });
-            }
-        }
+        // if (model.drawing) {
+        //     const drawingRel = rels[model.drawing.rId];
+        //     const match = drawingRel.Target.match(/\/drawings\/([a-zA-Z0-9]+)[.][a-zA-Z]{3,4}$/);
+        //     if (match) {
+        //         const drawingName = match[1];
+        //         const drawing = options.drawings[drawingName];
+        //         drawing.anchors.forEach(anchor => {
+        //             if (anchor.medium) {
+        //                 const image = {
+        //                     type: 'image',
+        //                     imageId: anchor.medium.index,
+        //                     range: anchor.range,
+        //                     hyperlinks: anchor.picture.hyperlinks,
+        //                 };
+        //                 model.media.push(image);
+        //             }
+        //         });
+        //     }
+        // }
+        // const backgroundRel = model.background && rels[model.background.rId];
+        // if (backgroundRel) {
+        //     const target = backgroundRel.Target.split('/media/')[1];
+        //     const imageId = options.mediaIndex && options.mediaIndex[target];
+        //     if (imageId !== undefined) {
+        //         model.media.push({
+        //             type: 'background',
+        //             imageId,
+        //         });
+        //     }
+        // }
         model.tables = (model.tables || []).map(tablePart => {
             const rel = rels[tablePart.rId];
             return options.tables[rel.Target];

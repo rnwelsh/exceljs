@@ -9,7 +9,7 @@ import SheetXform from "./sheet-xform.js";
 import WorkbookViewXform from "./workbook-view-xform.js";
 import WorkbookPropertiesXform from "./workbook-properties-xform.js";
 import WorkbookCalcPropertiesXform from "./workbook-calc-properties-xform.js";
-import WorkbookPivotCacheXform from "./workbook-pivot-cache-xform.js";
+// import WorkbookPivotCacheXform from "./workbook-pivot-cache-xform.js";
 class WorkbookXform extends BaseXform {
     constructor() {
         super();
@@ -28,11 +28,11 @@ class WorkbookXform extends BaseXform {
                 childXform: new DefinedNameXform(),
             }),
             calcPr: new WorkbookCalcPropertiesXform(),
-            pivotCaches: new ListXform({
-                tag: 'pivotCaches',
-                count: false,
-                childXform: new WorkbookPivotCacheXform(),
-            }),
+            // pivotCaches: new ListXform({
+            //     tag: 'pivotCaches',
+            //     count: false,
+            //     childXform: new WorkbookPivotCacheXform(),
+            // }),
         };
     }
     prepare(model) {
@@ -74,10 +74,10 @@ class WorkbookXform extends BaseXform {
         if (printAreas.length) {
             model.definedNames = model.definedNames.concat(printAreas);
         }
-        (model.media || []).forEach((medium, i) => {
-            // assign name
-            medium.name = medium.type + (i + 1);
-        });
+        // (model.media || []).forEach((medium, i) => {
+        //     // assign name
+        //     medium.name = medium.type + (i + 1);
+        // });
     }
     render(xmlStream, model) {
         xmlStream.openXml(XmlStream.StdDocAttributes);
@@ -88,7 +88,7 @@ class WorkbookXform extends BaseXform {
         this.map.sheets.render(xmlStream, model.sheets);
         this.map.definedNames.render(xmlStream, model.definedNames);
         this.map.calcPr.render(xmlStream, model.calcProperties);
-        this.map.pivotCaches.render(xmlStream, model.pivotTables);
+        // this.map.pivotCaches.render(xmlStream, model.pivotTables);
         xmlStream.closeNode();
     }
     parseOpen(node) {
@@ -208,9 +208,9 @@ class WorkbookXform extends BaseXform {
         });
         model.definedNames = definedNames;
         // used by sheets to build their image models
-        model.media.forEach((media, i) => {
-            media.index = i;
-        });
+        // model.media.forEach((media, i) => {
+        //     media.index = i;
+        // });
     }
 }
 WorkbookXform.WORKBOOK_ATTRIBUTES = {

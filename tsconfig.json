@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "target": "ESNext",
     "sourceMap": false,
     "allowJs": true,
@@ -16,9 +16,10 @@
     
     
     // "outFile": "./dist/exceljs.tsc.js",
-    "types": [
-      // "node"
-    ],
+    // "types": [
+    //   "events",
+    //   "readable-stream"
+    // ],
     "allowArbitraryExtensions": false,
     "allowUmdGlobalAccess": true,
     "alwaysStrict": false,

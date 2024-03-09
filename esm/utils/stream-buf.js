@@ -1,5 +1,5 @@
-import { Duplex } from "node:stream";
 import StringBuf from "./string-buf.js";
+const {Duplex} = require("readable-stream");
 // =============================================================================
 // data chunks - encapsulating incoming data
 class StringChunk {
@@ -116,6 +116,7 @@ class ReadWriteBuf {
 //  As readable stream - feed data into the writable part and have some other code read from it.
 // Note: Not sure why but StreamBuf does not like JS "class" sugar. It fails the
 // integration tests
+
 class StreamBuf extends Duplex {
     constructor(options = {}) {
         super(options);

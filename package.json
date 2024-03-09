@@ -29,21 +29,22 @@
     "index.d.ts"
   ],
   "scripts": {
-    "clean": "pwsh -command config/clean.ps1",
-    "rollup": "npm run clean && rollup -c",
-    "tsc": "pwsh -command ./config/clean.ps1 && tsc"
+    "clean": "powershell remove-item dist/* -Recurse -Force",
+    "rollup": "rollup -c",
+    "tsc": "npm run clean && tsc"
   },
   "dependencies": {
-    "archiver": "^7.0.0",
     "fflate": "^0.8.2",
-    "jszip": "^3.10.1",
+    "readable-stream": "^4.5.2",
     "saxes": "^6.0.0",
-    "unzipper": "^0.10.14"
+    "web-events": "npm:events@^3.3.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",
+    "@types/events": "^3.0.3",
+    "@types/readable-stream": "^4.0.10",
     "@types/rollup": "^0.54.0",
     "cjstoesm": "^2.1.2",
     "esbuild": "^0.20.1",

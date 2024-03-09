@@ -23,8 +23,8 @@ export default class Workbook {
         this.subject = '';
         this.title = '';
         this.views = [];
-        this.media = [];
-        this.pivotTables = [];
+        // this.media = [];
+        // this.pivotTables = [];
         this._definedNames = new DefinedNames();
     }
     get xlsx() {
@@ -119,15 +119,15 @@ export default class Workbook {
         // Note: themes are not an exposed feature, meddle at your peril!
         this._themes = undefined;
     }
-    addImage(image) {
-        // TODO:  validation?
-        const id = this.media.length;
-        this.media.push(Object.assign({}, image, { type: 'image' }));
-        return id;
-    }
-    getImage(id) {
-        return this.media[id];
-    }
+    // addImage(image) {
+    //     // TODO:  validation?
+    //     const id = this.media.length;
+    //     this.media.push(Object.assign({}, image, { type: 'image' }));
+    //     return id;
+    // }
+    // getImage(id) {
+    //     return this.media[id];
+    // }
     get model() {
         return {
             creator: this.creator || 'Unknown',
@@ -151,8 +151,8 @@ export default class Workbook {
             revision: this.revision,
             contentStatus: this.contentStatus,
             themes: this._themes,
-            media: this.media,
-            pivotTables: this.pivotTables,
+            // media: this.media,
+            // pivotTables: this.pivotTables,
             calcProperties: this.calcProperties,
         };
     }
@@ -190,7 +190,7 @@ export default class Workbook {
         this._definedNames.model = value.definedNames;
         this.views = value.views;
         this._themes = value.themes;
-        this.media = value.media || [];
-        this.pivotTables = value.pivotTables || [];
+        // this.media = value.media || [];
+        // this.pivotTables = value.pivotTables || [];
     }
 }

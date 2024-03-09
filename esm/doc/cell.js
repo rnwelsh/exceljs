@@ -1,4 +1,4 @@
-// @ts-nocheck
+//// @ts-nocheck
 import { validateAddress } from "../utils/col-cache.js";
 import { escapeHtml } from "../utils/under-dash.js";
 import { ValueType, FormulaType } from "./enums.js";
@@ -452,9 +452,9 @@ class DateValue {
     set address(value) {
         this.model.address = value;
     }
-    toCsvString() {
-        return this.model.value.toISOString();
-    }
+    // toCsvString() {
+    //     return this.model.value.toISOString();
+    // }
     release() { }
     toString() {
         return this.model.value.toString();
@@ -523,9 +523,9 @@ class HyperlinkValue {
     set address(value) {
         this.model.address = value;
     }
-    toCsvString() {
-        return this.model.hyperlink;
-    }
+    // toCsvString() {
+    //     return this.model.hyperlink;
+    // }
     release() { }
     toString() {
         return this.model.text;
@@ -576,9 +576,9 @@ class MergeValue {
     set address(value) {
         this.model.address = value;
     }
-    toCsvString() {
-        return '';
-    }
+    // toCsvString() {
+    //     return '';
+    // }
     release() {
         this._master.releaseMergeRef();
     }
@@ -705,9 +705,9 @@ class FormulaValue {
         }
         return this._translatedFormula;
     }
-    toCsvString() {
-        return `${this.model.result || ''}`;
-    }
+    // toCsvString() {
+    //     return `${this.model.result || ''}`;
+    // }
     release() { }
     toString() {
         return this.model.result ? this.model.result.toString() : '';
@@ -739,9 +739,9 @@ class SharedStringValue {
     set address(value) {
         this.model.address = value;
     }
-    toCsvString() {
-        return this.model.value.toString();
-    }
+    // toCsvString() {
+    //     return this.model.value.toString();
+    // }
     release() { }
     toString() {
         return this.model.value.toString();
@@ -773,9 +773,9 @@ class BooleanValue {
     set address(value) {
         this.model.address = value;
     }
-    toCsvString() {
-        return this.model.value ? 1 : 0;
-    }
+    // toCsvString() {
+    //     return this.model.value ? 1 : 0;
+    // }
     release() { }
     toString() {
         return this.model.value.toString();
@@ -807,9 +807,9 @@ class ErrorValue {
     set address(value) {
         this.model.address = value;
     }
-    toCsvString() {
-        return this.toString();
-    }
+    // toCsvString() {
+    //     return this.toString();
+    // }
     release() { }
     toString() {
         return this.model.value.error.toString();
@@ -843,9 +843,9 @@ class JSONValue {
     set address(value) {
         this.model.address = value;
     }
-    toCsvString() {
-        return this.model.value;
-    }
+    // toCsvString() {
+    //     return this.model.value;
+    // }
     release() { }
     toString() {
         return this.model.value;

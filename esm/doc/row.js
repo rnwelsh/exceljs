@@ -184,13 +184,13 @@ class Row {
         else {
             // assume object with column keys
             this._worksheet.eachColumnKey((column, key) => {
-                if (value[key] !== undefined) {
-                    this.getCellEx({
-                        address: encodeAddress(this._number, column.number),
-                        row: this._number,
-                        col: column.number,
-                    }).value = value[key];
-                }
+              if (value[key] === undefined) return
+              this.getCellEx({
+                  address: encodeAddress(this._number, column.number),
+                  row: this._number,
+                  col: column.number,
+              }).value = value[key];
+                
             });
         }
     }

@@ -19,7 +19,7 @@ minifyWhitespace:true
 /** @type {import('rollup').RollupWatchOptions} */
 export default {
   input: './esm/index.js',
-  external: ['node:stream', 'node:events'],
+  // external: ['node:stream', 'node:events'],
   output: {
     // dir: 'dist',
     file: 'dist/exceljs.js',
@@ -41,8 +41,9 @@ export default {
     interop: 'esModule',
     sourcemap: false,
     validate: true,
+    
   },
-  plugins: [nodeResolve(), typescript()],
+  plugins: [nodeResolve({preferBuiltins:false}), typescript()],
   watch: {
     buildDelay: 200,
     clearScreen: true,

@@ -1,13 +1,9 @@
-import events from "node:events"
 import StreamBuf from "./stream-buf.js"
 import { stringToBuffer } from "./browser-buffer-encode.js"
-// import { Zip, AsyncZipDeflate } from 'fflate'
 const { Zip, AsyncZipDeflate } = (await import('fflate'))
-// const JSZip = (await import("jszip")).default;
-// =============================================================================
-// The ZipWriter class
-// Packs streamed data into an output zip stream
-export class ZipWriter extends events.EventEmitter {
+const {EventEmitter} = require('events')
+
+export class ZipWriter extends EventEmitter {
   constructor(options) {
     super()
     this.options = Object.assign({
@@ -21,13 +17,16 @@ export class ZipWriter extends events.EventEmitter {
     data = stringToBuffer(data)
     const file = new AsyncZipDeflate(options.name)
     this.zip.add(file)
-    file.push(data,true)
+    file.push(data, true)
   }
   async finalize() {
     // const content = this.zip
     this.stream.end(this.zip)
     this.emit('finish')
   }
+
+
+
   // ==========================================================================
   // Stream.Readable interface
   read(size) {

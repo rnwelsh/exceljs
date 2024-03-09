@@ -4,10 +4,10 @@ import Range from "./range.js";
 import Row from "./row.js";
 import Column from "./column.js";
 import { ValueType } from "./enums.js";
-import Image from "./image.js";
+// import Image from "./image.js";
 import Table from "./table.js";
-import DataValidations from "./data-validations.js";
-import { makePivotTable } from "./pivot-table.js";
+// import DataValidations from "./data-validations.js";
+// import { makePivotTable } from "./pivot-table.js";
 import { copyStyle } from "../utils/copy-style.js";
 // Worksheet requirements
 //  Operate as sheet inside workbook or standalone
@@ -79,12 +79,12 @@ class Worksheet {
             firstHeader: null,
             firstFooter: null,
         }, options.headerFooter);
-        this.dataValidations = new DataValidations();
+        // this.dataValidations = new DataValidations();
         // for freezepanes, split, zoom, gridlines, etc
         this.views = options.views || [];
         this.autoFilter = options.autoFilter || null;
         // for images, etc
-        this._media = [];
+        // this._media = [];
         // worksheet protection
         this.sheetProtection = null;
         // for tables
@@ -632,64 +632,37 @@ class Worksheet {
     }
     // =========================================================================
     // Images
-    addImage(imageId, range) {
-        const model = {
-            type: 'image',
-            imageId,
-            range,
-        };
-        this._media.push(new Image(this, model));
-    }
-    getImages() {
-        return this._media.filter(m => m.type === 'image');
-    }
-    addBackgroundImage(imageId) {
-        const model = {
-            type: 'background',
-            imageId,
-        };
-        this._media.push(new Image(this, model));
-    }
-    getBackgroundImageId() {
-        const image = this._media.find(m => m.type === 'background');
-        return image && image.imageId;
-    }
+    // addImage(imageId, range) {
+    //     const model = {
+    //         type: 'image',
+    //         imageId,
+    //         range,
+    //     };
+    //     this._media.push(new Image(this, model));
+    // }
+    // getImages() {
+    //     return this._media.filter(m => m.type === 'image');
+    // }
+    // addBackgroundImage(imageId) {
+    //     const model = {
+    //         type: 'background',
+    //         imageId,
+    //     };
+    //     this._media.push(new Image(this, model));
+    // }
+    // getBackgroundImageId() {
+    //     const image = this._media.find(m => m.type === 'background');
+    //     return image && image.imageId;
+    // }
     // =========================================================================
     // Worksheet Protection
-    protect(password, options) {
-        // TODO: make this function truly async
-        // perhaps marshal to worker thread or something
-        return new Promise(resolve => {
-            this.sheetProtection = {
-                sheet: true,
-            };
-            if (options && 'spinCount' in options) {
-                // force spinCount to be integer >= 0
-                options.spinCount = Number.isFinite(options.spinCount) ? Math.round(Math.max(0, options.spinCount)) : 100000;
-            }
-            // if (password) {
-            //   this.sheetProtection.algorithmName = 'SHA-512';
-            //   this.sheetProtection.saltValue = Encryptor.randomBytes(16).toString('base64');
-            //   this.sheetProtection.spinCount = options && 'spinCount' in options ? options.spinCount : 100000; // allow user specified spinCount
-            //   this.sheetProtection.hashValue = Encryptor.convertPasswordToHash(
-            //     password,
-            //     'SHA512',
-            //     this.sheetProtection.saltValue,
-            //     this.sheetProtection.spinCount
-            //   );
-            // }
-            if (options) {
-                this.sheetProtection = Object.assign(this.sheetProtection, options);
-                if (!password && 'spinCount' in options) {
-                    delete this.sheetProtection.spinCount;
-                }
-            }
-            resolve();
-        });
-    }
-    unprotect() {
-        this.sheetProtection = null;
-    }
+  protect(options) {
+    if (options) Object.assign(this.sheetProtection, options)
+    else this.sheetProtection = {sheet:true}
+  }
+  unprotect() {
+    this.sheetProtection = null;
+  }
     // =========================================================================
     // Tables
     addTable(model) {
@@ -708,15 +681,15 @@ class Worksheet {
     }
     // =========================================================================
     // Pivot Tables
-    addPivotTable(model) {
-        // eslint-disable-next-line no-console
-        console.warn(`Warning: Pivot Table support is experimental. 
-Please leave feedback at https://github.com/exceljs/exceljs/discussions/2575`);
-        const pivotTable = makePivotTable(this, model);
-        this.pivotTables.push(pivotTable);
-        this.workbook.pivotTables.push(pivotTable);
-        return pivotTable;
-    }
+//     addPivotTable(model) {
+//         // eslint-disable-next-line no-console
+//         console.warn(`Warning: Pivot Table support is experimental. 
+// Please leave feedback at https://github.com/exceljs/exceljs/discussions/2575`);
+//         const pivotTable = makePivotTable(this, model);
+//         this.pivotTables.push(pivotTable);
+//         this.workbook.pivotTables.push(pivotTable);
+//         return pivotTable;
+//     }
     // ===========================================================================
     // Conditional Formatting
     addConditionalFormatting(cf) {
@@ -751,7 +724,7 @@ Please leave feedback at https://github.com/exceljs/exceljs/discussions/2575`);
         const model = {
             id: this.id,
             name: this.name,
-            dataValidations: this.dataValidations.model,
+            // dataValidations: this.dataValidations.model,
             properties: this.properties,
             state: this.state,
             pageSetup: this.pageSetup,
@@ -759,10 +732,10 @@ Please leave feedback at https://github.com/exceljs/exceljs/discussions/2575`);
             rowBreaks: this.rowBreaks,
             views: this.views,
             autoFilter: this.autoFilter,
-            media: this._media.map(medium => medium.model),
+            // media: this._media.map(medium => medium.model),
             sheetProtection: this.sheetProtection,
             tables: Object.values(this.tables).map(table => table.model),
-            pivotTables: this.pivotTables,
+            // pivotTables: this.pivotTables,
             conditionalFormattings: this.conditionalFormattings,
         };
         // =================================================
@@ -807,13 +780,13 @@ Please leave feedback at https://github.com/exceljs/exceljs/discussions/2575`);
         this._columns = Column.fromModel(this, value.cols);
         this._parseRows(value);
         this._parseMergeCells(value);
-        this.dataValidations = new DataValidations(value.dataValidations);
+        // this.dataValidations = new DataValidations(value.dataValidations);
         this.properties = value.properties;
         this.pageSetup = value.pageSetup;
         this.headerFooter = value.headerFooter;
         this.views = value.views;
         this.autoFilter = value.autoFilter;
-        this._media = value.media.map(medium => new Image(this, medium));
+        // this._media = value.media.map(medium => new Image(this, medium));
         this.sheetProtection = value.sheetProtection;
         this.tables = value.tables.reduce((tables, table) => {
             const t = new Table();
@@ -821,7 +794,7 @@ Please leave feedback at https://github.com/exceljs/exceljs/discussions/2575`);
             tables[table.name] = t;
             return tables;
         }, {});
-        this.pivotTables = value.pivotTables;
+        // this.pivotTables = value.pivotTables;
         this.conditionalFormattings = value.conditionalFormattings;
     }
 }
