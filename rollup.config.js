@@ -1,6 +1,7 @@
 import typescript from '@rollup/plugin-typescript'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import terser from '@rollup/plugin-terser';
+// import commonjs from '@rollup/plugin-commonjs';
 /*************************
 await esbuild.build({
 entryPoints:['./esm/index.js'],
@@ -19,7 +20,7 @@ minifyWhitespace:true
 /** @type {import('rollup').RollupWatchOptions} */
 export default {
   input: './esm/index.js',
-  // external: ['node:stream', 'node:events'],
+  external: ['node:stream', 'node:events'],
   output: {
     // dir: 'dist',
     file: 'dist/exceljs.js',
@@ -38,7 +39,7 @@ export default {
       preset: 'es2015',
     },
     // DANGER --------> this may make it not work
-    interop: 'esModule',
+    interop:'auto' ,
     sourcemap: false,
     validate: true,
     

@@ -1,5 +1,6 @@
 import StringBuf from "./string-buf.js";
-const {Duplex} = require("readable-stream");
+import { Duplex } from 'node:stream'
+// const {Duplex} = // await import("readable-stream");
 // =============================================================================
 // data chunks - encapsulating incoming data
 class StringChunk {
