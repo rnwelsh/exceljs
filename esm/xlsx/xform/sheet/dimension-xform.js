@@ -1,23 +1,24 @@
-import BaseXform from "../base-xform.js";
+import BaseXform from "../base-xform.js"
 class DimensionXform extends BaseXform {
-    get tag() {
-        return 'dimension';
+  get tag() {
+    return 'dimension'
+  }
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model) {
+    if (model) {
+      xmlStream.lN('dimension', { ref: model })
     }
-    render(xmlStream, model) {
-        if (model) {
-            xmlStream.leafNode('dimension', { ref: model });
-        }
+  }
+  parseOpen(node) {
+    if (node.name === 'dimension') {
+      this.model = node.atts.ref
+      return true
     }
-    parseOpen(node) {
-        if (node.name === 'dimension') {
-            this.model = node.attributes.ref;
-            return true;
-        }
-        return false;
-    }
-    parseText() { }
-    parseClose() {
-        return false;
-    }
+    return false
+  }
+  parseText() { }
+  parseClose() {
+    return false
+  }
 }
-export default DimensionXform;
+export default DimensionXform

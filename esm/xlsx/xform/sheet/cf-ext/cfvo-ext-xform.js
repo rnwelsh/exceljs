@@ -1,35 +1,38 @@
-import CompositeXform from "../../composite-xform.js";
-import FExtXform from "./f-ext-xform.js";
+import CompositeXform from "../../composite-xform.js"
+import FExtXform from "./f-ext-xform.js"
 class CfvoExtXform extends CompositeXform {
-    constructor() {
-        super();
-        this.map = {
-            'xm:f': (this.fExtXform = new FExtXform()),
-        };
+  constructor() {
+    super()
+    this.map = {
+      'xm:f': (this.fExtXform = new FExtXform()),
     }
-    get tag() {
-        return 'x14:cfvo';
+  }
+  get tag() {
+    return 'x14:cfvo'
+  }
+
+
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model) {
+    xmlStream.oN(this.tag, {
+      type: model.type,
+    })
+    if (model.value !== undefined) {
+      this.fExtXform.render(xmlStream, model.value)
     }
-    render(xmlStream, model) {
-        xmlStream.openNode(this.tag, {
-            type: model.type,
-        });
-        if (model.value !== undefined) {
-            this.fExtXform.render(xmlStream, model.value);
-        }
-        xmlStream.closeNode();
+    xmlStream.cN()
+  }
+  createNewModel(node) {
+    return {
+      type: node.atts.type,
     }
-    createNewModel(node) {
-        return {
-            type: node.attributes.type,
-        };
+  }
+  onParserClose(name, parser) {
+    switch (name) {
+      case 'xm:f':
+        this.model.value = parser.model ? parseFloat(parser.model) : 0
+        break
     }
-    onParserClose(name, parser) {
-        switch (name) {
-            case 'xm:f':
-                this.model.value = parser.model ? parseFloat(parser.model) : 0;
-                break;
-        }
-    }
+  }
 }
-export default CfvoExtXform;
+export default CfvoExtXform

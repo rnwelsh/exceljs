@@ -3,7 +3,7 @@ import { validateAddress } from "../utils/col-cache.js";
 import { escapeHtml } from "../utils/under-dash.js";
 import { ValueType, FormulaType } from "./enums.js";
 import { slideFormula } from "../utils/shared-formula.js";
-import Note from "./note.js";
+// import Note from "./note.js";
 // Cell requirements
 //  Operate inside a worksheet
 //  Store and retrieve a value with a range of types: text, number, date, hyperlink, reference, formula, etc.
@@ -68,12 +68,12 @@ class Cell {
     set fill(value) {
         this.style.fill = value;
     }
-    get protection() {
-        return this.style.protection;
-    }
-    set protection(value) {
-        this.style.protection = value;
-    }
+    // get protection() {
+    //     return this.style.protection;
+    // }
+    // set protection(value) {
+    //     this.style.protection = value;
+    // }
     _mergeStyle(rowStyle, colStyle, style) {
         const numFmt = (rowStyle && rowStyle.numFmt) || (colStyle && colStyle.numFmt);
         if (numFmt)
@@ -90,9 +90,9 @@ class Cell {
         const fill = (rowStyle && rowStyle.fill) || (colStyle && colStyle.fill);
         if (fill)
             style.fill = fill;
-        const protection = (rowStyle && rowStyle.protection) || (colStyle && colStyle.protection);
-        if (protection)
-            style.protection = protection;
+        // const protection = (rowStyle && rowStyle.protection) || (colStyle && colStyle.protection);
+        // if (protection)
+        //     style.protection = protection;
         return style;
     }
     // =========================================================================
@@ -177,12 +177,12 @@ class Cell {
         // assign value
         this._value = Value.create(Value.getType(v), this, v);
     }
-    get note() {
-        return this._comment && this._comment.note;
-    }
-    set note(note) {
-        this._comment = new Note(note);
-    }
+    // get note() {
+    //     return this._comment && this._comment.note;
+    // }
+    // set note(note) {
+    //     this._comment = new Note(note);
+    // }
     get text() {
         return this._value.toString();
     }
@@ -250,15 +250,15 @@ class Cell {
     }
     // =========================================================================
     // Data Validation stuff
-    get _dataValidations() {
-        return this.worksheet.dataValidations;
-    }
-    get dataValidation() {
-        return this._dataValidations.find(this.address);
-    }
-    set dataValidation(value) {
-        this._dataValidations.add(this.address, value);
-    }
+    // get _dataValidations() {
+    //     return this.worksheet.dataValidations;
+    // }
+    // get dataValidation() {
+    //     return this._dataValidations.find(this.address);
+    // }
+    // set dataValidation(value) {
+    //     this._dataValidations.add(this.address, value);
+    // }
     // =========================================================================
     // Model stuff
     get model() {
@@ -274,11 +274,11 @@ class Cell {
         this._value = Value.create(value.type, this);
         this._value.model = value;
         if (value.comment) {
-            switch (value.comment.type) {
-                case 'note':
-                    this._comment = Note.fromModel(value.comment);
-                    break;
-            }
+            // switch (value.comment.type) {
+            //     case 'note':
+            //         this._comment = Note.fromModel(value.comment);
+            //         break;
+            // }
         }
         if (value.style) {
             this.style = value.style;

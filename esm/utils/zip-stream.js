@@ -1,7 +1,7 @@
 import StreamBuf from "./stream-buf.js"
 import { stringToBuffer } from "./browser-buffer-encode.js"
-const { Zip, AsyncZipDeflate } = (await import('fflate'))
-const {EventEmitter} = require('events')
+import EventEmitter from './events.js'
+import { Zip, AsyncZipDeflate } from 'fflate' //(await import('fflate'))
 
 export class ZipWriter extends EventEmitter {
   constructor(options) {

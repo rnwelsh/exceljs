@@ -1,28 +1,29 @@
-import BaseXform from "../base-xform.js";
+import BaseXform from "../base-xform.js"
 class WorksheetXform extends BaseXform {
-    render(xmlStream, model) {
-        xmlStream.leafNode('sheet', {
-            sheetId: model.id,
-            name: model.name,
-            state: model.state,
-            'r:id': model.rId,
-        });
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model) {
+    xmlStream.lN('sheet', {
+      sheetId: model.id,
+      name: model.name,
+      state: model.state,
+      'r:id': model.rId,
+    })
+  }
+  parseOpen(node) {
+    if (node.name === 'sheet') {
+      this.model = {
+        name: utils.xmlDecode(node.atts.name),
+        id: parseInt(node.atts.sheetId, 10),
+        state: node.atts.state,
+        rId: node.atts['r:id'],
+      }
+      return true
     }
-    parseOpen(node) {
-        if (node.name === 'sheet') {
-            this.model = {
-                name: utils.xmlDecode(node.attributes.name),
-                id: parseInt(node.attributes.sheetId, 10),
-                state: node.attributes.state,
-                rId: node.attributes['r:id'],
-            };
-            return true;
-        }
-        return false;
-    }
-    parseText() { }
-    parseClose() {
-        return false;
-    }
+    return false
+  }
+  parseText() { }
+  parseClose() {
+    return false
+  }
 }
-export default WorksheetXform;
+export default WorksheetXform

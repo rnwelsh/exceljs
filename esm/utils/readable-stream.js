@@ -1,0 +1,1 @@
+export const { Duplex } = require('../../node_modules/readable-stream/lib/ours/browser.js')

@@ -51,7 +51,7 @@ const __cache = {
     let l3;
     let n = 1;
     if (level >= 4) {
-        throw new Error('Out of bounds. Excel supports columns from 1 to 16384');
+        throw new Error('1 to 16384 only');
     }
     if (__cache.l2nFill < 1 && level >= 1) {
         while (n <= 26) {
@@ -95,12 +95,12 @@ export const l2n = (l) => {
         _fill(l.length);
     }
     if (!__cache.l2n[l]) {
-        throw new Error(`Out of bounds. Invalid column letter: ${l}`);
+        throw new Error(`Invalid letter: ${l}`);
     }
     return __cache.l2n[l];
 }, n2l = (n) => {
     if (n < 1 || n > 16384) {
-        throw new Error(`${n} is out of bounds. Excel supports columns from 1 to 16384`);
+        throw new Error(`${n} invalid - 1 to 16384`);
     }
     if (!__cache.n2l[n]) {
         _fill(_level(n));
@@ -155,7 +155,7 @@ decodeAddress = (value) => {
         colNumber = undefined;
     }
     else if (colNumber > 16384) {
-        throw new Error(`Out of bounds. Invalid column letter: ${col}`);
+        throw new Error(`Invalid column: ${col}`);
     }
     if (!hasRow) {
         rowNumber = undefined;
@@ -253,7 +253,7 @@ encode = () => {
         case 4:
             return `${encodeAddress(arguments[0], arguments[1])}:${encodeAddress(arguments[2], arguments[3])}`;
         default:
-            throw new Error('Can only encode with 2 or 4 arguments');
+            throw new Error('only 2 or 4 arguments');
     }
 }, 
 // return true if address is contained within range

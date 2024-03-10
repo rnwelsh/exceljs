@@ -128,7 +128,7 @@ class Column {
             return false;
         }
         const s = this.style;
-        if (s && (s.font || s.numFmt || s.alignment || s.border || s.fill || s.protection)) {
+        if (s && (s.font || s.numFmt || s.alignment || s.border || s.fill )) {
             return false;
         }
         return true;
@@ -196,12 +196,12 @@ class Column {
     set alignment(value) {
         this._applyStyle('alignment', value);
     }
-    get protection() {
-        return this.style.protection;
-    }
-    set protection(value) {
-        this._applyStyle('protection', value);
-    }
+    // get protection() {
+    //     return this.style.protection;
+    // }
+    // set protection(value) {
+    //     this._applyStyle('protection', value);
+    // }
     get border() {
         return this.style.border;
     }

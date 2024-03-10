@@ -31,20 +31,6 @@ export const inherits = function (cls, superCtor, statics, prototype) {
 // eslint-disable-next-line no-control-regex
 export const xmlDecodeRegex = /[<>&'"\x7F\x00-\x08\x0B-\x0C\x0E-\x1F]/;
 // const utils ={    export con st nop = ()=> { }
-export const promiseImmediate = (value) => {
-    return new Promise(resolve => {
-        if (global.setImmediate) {
-            setImmediate(() => {
-                resolve(value);
-            });
-        }
-        else { // poorman's setImmediate - must wait at least 1ms
-            setTimeout(() => {
-                resolve(value);
-            }, 1);
-        }
-    });
-};
 export const dateToExcel = (d, date1904) => {
     // eslint-disable-next-line no-mixed-operators
     return 25569 + d.getTime() / (24 * 3600 * 1000) - (date1904 ? 1462 : 0);
@@ -182,4 +168,3 @@ export const objectFromProps = (props, value = null) => {
     }, {});
 };
 // };
-export default 'butts';

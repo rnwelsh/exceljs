@@ -1,44 +1,44 @@
-import BaseXform from "../base-xform.js";
+import BaseXform from "../base-xform.js"
 class BaseCellAnchorXform extends BaseXform {
-    parseOpen(node) {
+  parseOpen(node) {
+    if (this.parser) {
+      this.parser.parseOpen(node)
+      return true
+    }
+    switch (node.name) {
+      case this.tag:
+        this.reset()
+        this.model = {
+          range: {
+            editAs: node.atts.editAs || 'oneCell',
+          },
+        }
+        break
+      default:
+        this.parser = this.map[node.name]
         if (this.parser) {
-            this.parser.parseOpen(node);
-            return true;
+          this.parser.parseOpen(node)
         }
-        switch (node.name) {
-            case this.tag:
-                this.reset();
-                this.model = {
-                    range: {
-                        editAs: node.attributes.editAs || 'oneCell',
-                    },
-                };
-                break;
-            default:
-                this.parser = this.map[node.name];
-                if (this.parser) {
-                    this.parser.parseOpen(node);
-                }
-                break;
-        }
-        return true;
+        break
     }
-    parseText(text) {
-        if (this.parser) {
-            this.parser.parseText(text);
-        }
+    return true
+  }
+  parseText(text) {
+    if (this.parser) {
+      this.parser.parseText(text)
     }
-    reconcilePicture(model, options) {
-        if (model && model.rId) {
-            const rel = options.rels[model.rId];
-            const match = rel.Target.match(/.*\/media\/(.+[.][a-zA-Z]{3,4})/);
-            if (match) {
-                const name = match[1];
-                const mediaId = options.mediaIndex[name];
-                return options.media[mediaId];
-            }
-        }
-        return undefined;
+  }
+  reconcilePicture(model, options) {
+    if (model && model.rId) {
+      const rel = options.rels[model.rId]
+      const match = rel.Target.match(/.*\/media\/(.+[.][a-zA-Z]{3,4})/)
+      if (match) {
+        const name = match[1]
+        const mediaId = options.mediaIndex[name]
+        return options.media[mediaId]
+      }
     }
+    return undefined
+  }
 }
-export default BaseCellAnchorXform;
+export default BaseCellAnchorXform

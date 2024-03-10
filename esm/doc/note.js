@@ -49,10 +49,10 @@ export default class Note {
                 insetmode: 'auto',
                 inset: [0.13, 0.13, 0.25, 0.25],
             },
-            protection: {
-                locked: 'True',
-                lockText: 'True',
-            },
+            // protection: {
+            //     locked: 'True',
+            //     lockText: 'True',
+            // },
             editAs: 'absolute',
         },
     };

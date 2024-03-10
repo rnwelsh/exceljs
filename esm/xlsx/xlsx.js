@@ -18,8 +18,8 @@ import TableXform from './xform/table/table-xform.js'
 // import PivotCacheRecordsXform from './xform/pivot-table/pivot-cache-records-xform.js'
 // import PivotCacheDefinitionXform from './xform/pivot-table/pivot-cache-definition-xform.js'
 // import PivotTableXform from './xform/pivot-table/pivot-table-xform.js'
-import CommentsXform from './xform/comment/comments-xform.js'
-import VmlNotesXform from './xform/comment/vml-notes-xform.js'
+// import CommentsXform from './xform/comment/comments-xform.js'
+// import VmlNotesXform from './xform/comment/vml-notes-xform.js'
 import theme1Xml from './xml/theme1.js'
 import RelType from './rel-type.js'
 // function fsReadFileAsync(filename, options) {
@@ -43,7 +43,7 @@ const defaultModel = {
   useStyles: true,
   styles: '',
   // drawings: [],
-  commentRefs: [],
+  // commentRefs: [],
   tables: [],
 }
 
@@ -210,8 +210,8 @@ export default class XLSX {
   async addWorksheets(zip, model) {
     const worksheetXform = new WorksheetXform()
     const relationshipsXform = new RelationshipsXform()
-    const commentsXform = new CommentsXform()
-    const vmlNotesXform = new VmlNotesXform()
+    // const commentsXform = new CommentsXform()
+    // const vmlNotesXform = new VmlNotesXform()
 
     model.worksheets.forEach(worksheet => {
       let xmlStream = new XmlStream()
@@ -228,18 +228,18 @@ export default class XLSX {
           name: `xl/worksheets/_rels/sheet${worksheet.id}.xml.rels`,
         })
       }
-      if (worksheet.comments.length > 0) {
-        xmlStream = new XmlStream()
-        commentsXform.render(xmlStream, worksheet)
-        zip.append(xmlStream.xml, {
-          name: `xl/comments${worksheet.id}.xml`,
-        })
-        xmlStream = new XmlStream()
-        vmlNotesXform.render(xmlStream, worksheet)
-        zip.append(xmlStream.xml, {
-          name: `xl/drawings/vmlDrawing${worksheet.id}.vml`,
-        })
-      }
+      // if (worksheet.comments.length > 0) {
+      //   xmlStream = new XmlStream()
+      //   commentsXform.render(xmlStream, worksheet)
+      //   zip.append(xmlStream.xml, {
+      //     name: `xl/comments${worksheet.id}.xml`,
+      //   })
+      //   // xmlStream = new XmlStream()
+      //   // vmlNotesXform.render(xmlStream, worksheet)
+      //   // zip.append(xmlStream.xml, {
+      //   //   name: `xl/drawings/vmlDrawing${worksheet.id}.vml`,
+      //   // })
+      // }
     })
   }
   // addPivotTables(zip, model) {
@@ -293,10 +293,10 @@ export default class XLSX {
     model.useStyles = options.useStyles ?? true
     model.sharedStrings = new SharedStringsXform()
     model.styles = model.useStyles && new StylesXform(true)
-
-    const workbookXform = new WorkbookXform()
+    model.sheets = model.worksheets
+    // const workbookXform = new WorkbookXform()
     const worksheetXform = new WorksheetXform()
-    workbookXform.prepare(model)
+    // workbookXform.prepare(model)
 
     const worksheetOptions = {
       sharedStrings: model.sharedStrings,
@@ -305,7 +305,7 @@ export default class XLSX {
       // drawingsCount: 0,
       // media: model.media,
       // drawings: model.drawings,
-      commentRefs: model.commentRefs,
+      // commentRefs: model.commentRefs,
     }
     model.worksheets.forEach(worksheet => {
       worksheet.tables.forEach((table,tableCount) => {

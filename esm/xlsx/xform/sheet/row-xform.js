@@ -1,127 +1,129 @@
-import BaseXform from "../base-xform.js";
-import { parseBoolean } from "../../../utils/utils.js";
-import CellXform from "./cell-xform.js";
+import BaseXform from "../base-xform.js"
+import { parseBoolean } from "../../../utils/utils.js"
+import CellXform from "./cell-xform.js"
 class RowXform extends BaseXform {
-    constructor(options) {
-        super();
-        this.maxItems = options && options.maxItems;
-        this.map = {
-            c: new CellXform(),
-        };
+  constructor(options) {
+    super()
+    this.maxItems = options && options.maxItems
+    this.map = {
+      c: new CellXform(),
     }
-    get tag() {
-        return 'row';
+  }
+  get tag() {
+    return 'row'
+  }
+  prepare(model, options) {
+    const styleId = options.styles.addStyleModel(model.style)
+    if (styleId) {
+      model.styleId = styleId
     }
-    prepare(model, options) {
-        const styleId = options.styles.addStyleModel(model.style);
-        if (styleId) {
-            model.styleId = styleId;
-        }
-        const cellXform = this.map.c;
-        model.cells.forEach(cellModel => {
-            cellXform.prepare(cellModel, options);
-        });
+    const cellXform = this.map.c
+    model.cells.forEach(cellModel => {
+      cellXform.prepare(cellModel, options)
+    })
+  }
+
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model, options) {
+    xmlStream.oN('row')
+    xmlStream.addA('r', model.number)
+    if (model.height) {
+      xmlStream.addA('ht', model.height)
+      xmlStream.addA('customHeight', '1')
     }
-    render(xmlStream, model, options) {
-        xmlStream.openNode('row');
-        xmlStream.addAttribute('r', model.number);
-        if (model.height) {
-            xmlStream.addAttribute('ht', model.height);
-            xmlStream.addAttribute('customHeight', '1');
-        }
-        if (model.hidden) {
-            xmlStream.addAttribute('hidden', '1');
-        }
-        if (model.min > 0 && model.max > 0 && model.min <= model.max) {
-            xmlStream.addAttribute('spans', `${model.min}:${model.max}`);
-        }
-        if (model.styleId) {
-            xmlStream.addAttribute('s', model.styleId);
-            xmlStream.addAttribute('customFormat', '1');
-        }
-        xmlStream.addAttribute('x14ac:dyDescent', '0.25');
-        if (model.outlineLevel) {
-            xmlStream.addAttribute('outlineLevel', model.outlineLevel);
-        }
-        if (model.collapsed) {
-            xmlStream.addAttribute('collapsed', '1');
-        }
-        const cellXform = this.map.c;
-        model.cells.forEach(cellModel => {
-            cellXform.render(xmlStream, cellModel, options);
-        });
-        xmlStream.closeNode();
+    if (model.hidden) {
+      xmlStream.addA('hidden', '1')
     }
-    parseOpen(node) {
-        if (this.parser) {
-            this.parser.parseOpen(node);
-            return true;
-        }
-        if (node.name === 'row') {
-            this.numRowsSeen += 1;
-            const spans = node.attributes.spans
-                ? node.attributes.spans.split(':').map(span => parseInt(span, 10))
-                : [undefined, undefined];
-            const model = (this.model = {
-                number: parseInt(node.attributes.r, 10),
-                min: spans[0],
-                max: spans[1],
-                cells: [],
-            });
-            if (node.attributes.s) {
-                model.styleId = parseInt(node.attributes.s, 10);
-            }
-            if (parseBoolean(node.attributes.hidden)) {
-                model.hidden = true;
-            }
-            if (parseBoolean(node.attributes.bestFit)) {
-                model.bestFit = true;
-            }
-            if (node.attributes.ht) {
-                model.height = parseFloat(node.attributes.ht);
-            }
-            if (node.attributes.outlineLevel) {
-                model.outlineLevel = parseInt(node.attributes.outlineLevel, 10);
-            }
-            if (parseBoolean(node.attributes.collapsed)) {
-                model.collapsed = true;
-            }
-            return true;
-        }
-        this.parser = this.map[node.name];
-        if (this.parser) {
-            this.parser.parseOpen(node);
-            return true;
-        }
-        return false;
+    if (model.min > 0 && model.max > 0 && model.min <= model.max) {
+      xmlStream.addA('spans', `${model.min}:${model.max}`)
     }
-    parseText(text) {
-        if (this.parser) {
-            this.parser.parseText(text);
-        }
+    if (model.styleId) {
+      xmlStream.addA('s', model.styleId)
+      xmlStream.addA('customFormat', '1')
     }
-    parseClose(name) {
-        if (this.parser) {
-            if (!this.parser.parseClose(name)) {
-                this.model.cells.push(this.parser.model);
-                if (this.maxItems && this.model.cells.length > this.maxItems) {
-                    throw new Error(`Max column count (${this.maxItems}) exceeded`);
-                }
-                this.parser = undefined;
-            }
-            return true;
-        }
-        return false;
+    xmlStream.addA('x14ac:dyDescent', '0.25')
+    if (model.outlineLevel) {
+      xmlStream.addA('outlineLevel', model.outlineLevel)
     }
-    reconcile(model, options) {
-        model.style = model.styleId ? options.styles.getStyleModel(model.styleId) : {};
-        if (model.styleId !== undefined) {
-            model.styleId = undefined;
-        }
-        const cellXform = this.map.c;
-        model.cells.forEach(cellModel => {
-            cellXform.reconcile(cellModel, options);
-        });
+    if (model.collapsed) {
+      xmlStream.addA('collapsed', '1')
     }
+    const cellXform = this.map.c
+    model.cells.forEach(cellModel => {
+      cellXform.render(xmlStream, cellModel, options)
+    })
+    xmlStream.cN()
+  }
+  parseOpen(node) {
+    if (this.parser) {
+      this.parser.parseOpen(node)
+      return true
+    }
+    if (node.name === 'row') {
+      this.numRowsSeen += 1
+      const spans = node.atts.spans
+        ? node.atts.spans.split(':').map(span => parseInt(span, 10))
+        : [undefined, undefined]
+      const model = (this.model = {
+        number: parseInt(node.atts.r, 10),
+        min: spans[0],
+        max: spans[1],
+        cells: [],
+      })
+      if (node.atts.s) {
+        model.styleId = parseInt(node.atts.s, 10)
+      }
+      if (parseBoolean(node.atts.hidden)) {
+        model.hidden = true
+      }
+      if (parseBoolean(node.atts.bestFit)) {
+        model.bestFit = true
+      }
+      if (node.atts.ht) {
+        model.height = parseFloat(node.atts.ht)
+      }
+      if (node.atts.outlineLevel) {
+        model.outlineLevel = parseInt(node.atts.outlineLevel, 10)
+      }
+      if (parseBoolean(node.atts.collapsed)) {
+        model.collapsed = true
+      }
+      return true
+    }
+    this.parser = this.map[node.name]
+    if (this.parser) {
+      this.parser.parseOpen(node)
+      return true
+    }
+    return false
+  }
+  parseText(text) {
+    if (this.parser) {
+      this.parser.parseText(text)
+    }
+  }
+  parseClose(name) {
+    if (this.parser) {
+      if (!this.parser.parseClose(name)) {
+        this.model.cells.push(this.parser.model)
+        if (this.maxItems && this.model.cells.length > this.maxItems) {
+          throw new Error(`Max column count (${this.maxItems}) exceeded`)
+        }
+        this.parser = undefined
+      }
+      return true
+    }
+    return false
+  }
+  reconcile(model, options) {
+    model.style = model.styleId ? options.styles.getStyleModel(model.styleId) : {}
+    if (model.styleId !== undefined) {
+      model.styleId = undefined
+    }
+    const cellXform = this.map.c
+    model.cells.forEach(cellModel => {
+      cellXform.reconcile(cellModel, options)
+    })
+  }
 }
-export default RowXform;
+export default RowXform

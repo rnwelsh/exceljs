@@ -1,20 +1,21 @@
-import BaseXform from "../base-xform.js";
+import BaseXform from "../base-xform.js"
 class RelationshipXform extends BaseXform {
-    render(xmlStream, model) {
-        xmlStream.leafNode('Relationship', model);
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model) {
+    xmlStream.lN('Relationship', model)
+  }
+  parseOpen(node) {
+    switch (node.name) {
+      case 'Relationship':
+        this.model = node.atts
+        return true
+      default:
+        return false
     }
-    parseOpen(node) {
-        switch (node.name) {
-            case 'Relationship':
-                this.model = node.attributes;
-                return true;
-            default:
-                return false;
-        }
-    }
-    parseText() { }
-    parseClose() {
-        return false;
-    }
+  }
+  parseText() { }
+  parseClose() {
+    return false
+  }
 }
-export default RelationshipXform;
+export default RelationshipXform

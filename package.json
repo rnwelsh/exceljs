@@ -35,11 +35,11 @@
   },
   "dependencies": {
     "fflate": "^0.8.2",
-    "readable-stream": "^4.5.2",
     "saxes": "^6.0.0",
     "web-events": "npm:events@^3.3.0"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^11.1.6",

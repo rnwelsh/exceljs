@@ -78,13 +78,13 @@ class Row {
                     cDst.value = cSrc.value;
                     cDst.style = cSrc.style;
                     // eslint-disable-next-line no-underscore-dangle
-                    cDst._comment = cSrc._comment;
+                    // cDst._comment = cSrc._comment;
                 }
                 else if (cDst) {
                     cDst.value = null;
                     cDst.style = {};
                     // eslint-disable-next-line no-underscore-dangle
-                    cDst._comment = undefined;
+                    // cDst._comment = undefined;
                 }
             }
         }
@@ -97,7 +97,7 @@ class Row {
                     cDst.value = cSrc.value;
                     cDst.style = cSrc.style;
                     // eslint-disable-next-line no-underscore-dangle
-                    cDst._comment = cSrc._comment;
+                    // cDst._comment = cSrc._comment;
                 }
                 else {
                     this._cells[i + nExpand - 1] = undefined;
@@ -110,7 +110,7 @@ class Row {
             cDst.value = inserts[i];
             cDst.style = {};
             // eslint-disable-next-line no-underscore-dangle
-            cDst._comment = undefined;
+            // cDst._comment = undefined;
         }
     }
     // Iterate over all non-null cells in this row
@@ -258,12 +258,12 @@ class Row {
     set alignment(value) {
         this._applyStyle('alignment', value);
     }
-    get protection() {
-        return this.style.protection;
-    }
-    set protection(value) {
-        this._applyStyle('protection', value);
-    }
+    // get protection() {
+    //     return this.style.protection;
+    // }
+    // set protection(value) {
+    //     this._applyStyle('protection', value);
+    // }
     get border() {
         return this.style.border;
     }

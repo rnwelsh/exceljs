@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
+    "sourceMap": false,
+    "allowJs": true,
+    "checkJs": true,
+    "strict": false,
+    "baseUrl": "./esm/",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "outDir": "./build",
+    "types": ["./esm/@types/index.d.ts"],
+    "allowArbitraryExtensions": false,
+    "alwaysStrict": false,
+    "lib": ["ESNext","DOM"],                                        /* Specify a set of bundled library declaration files that describe the target runtime environment. */
+    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
+    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+
+    
+    
+  },
+  "include": ["./esm/**/*"],
+  // "exclude": ["node_modules"]
+}

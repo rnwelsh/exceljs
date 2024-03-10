@@ -1,22 +1,25 @@
-import BaseXform from "../../base-xform.js";
+import BaseXform from "../../base-xform.js"
 class CfIconExtXform extends BaseXform {
-    get tag() {
-        return 'x14:cfIcon';
+  get tag() {
+    return 'x14:cfIcon'
+  }
+
+
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model) {
+    xmlStream.lN(this.tag, {
+      iconSet: model.iconSet,
+      iconId: model.iconId,
+    })
+  }
+  parseOpen({ atts }) {
+    this.model = {
+      iconSet: atts.iconSet,
+      iconId: BaseXform.toIntValue(atts.iconId),
     }
-    render(xmlStream, model) {
-        xmlStream.leafNode(this.tag, {
-            iconSet: model.iconSet,
-            iconId: model.iconId,
-        });
-    }
-    parseOpen({ attributes }) {
-        this.model = {
-            iconSet: attributes.iconSet,
-            iconId: BaseXform.toIntValue(attributes.iconId),
-        };
-    }
-    parseClose(name) {
-        return name !== this.tag;
-    }
+  }
+  parseClose(name) {
+    return name !== this.tag
+  }
 }
-export default CfIconExtXform;
+export default CfIconExtXform

@@ -1,27 +1,28 @@
-import BaseXform from "../base-xform.js";
+import BaseXform from "../base-xform.js"
 class DrawingXform extends BaseXform {
-    get tag() {
-        return 'drawing';
+  get tag() {
+    return 'drawing'
+  }
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model) {
+    if (model) {
+      xmlStream.lN(this.tag, { 'r:id': model.rId })
     }
-    render(xmlStream, model) {
-        if (model) {
-            xmlStream.leafNode(this.tag, { 'r:id': model.rId });
+  }
+  parseOpen(node) {
+    switch (node.name) {
+      case this.tag:
+        this.model = {
+          rId: node.atts['r:id'],
         }
+        return true
+      default:
+        return false
     }
-    parseOpen(node) {
-        switch (node.name) {
-            case this.tag:
-                this.model = {
-                    rId: node.attributes['r:id'],
-                };
-                return true;
-            default:
-                return false;
-        }
-    }
-    parseText() { }
-    parseClose() {
-        return false;
-    }
+  }
+  parseText() { }
+  parseClose() {
+    return false
+  }
 }
-export default DrawingXform;
+export default DrawingXform

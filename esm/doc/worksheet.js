@@ -43,6 +43,7 @@ class Worksheet {
             outlineLevelCol: 0,
             outlineLevelRow: 0,
         }, options.properties);
+      /*
         // for all things printing
         this.pageSetup = Object.assign({}, {
             margins: { left: 0.7, right: 0.7, top: 0.75, bottom: 0.75, header: 0.3, footer: 0.3 },
@@ -79,6 +80,7 @@ class Worksheet {
             firstHeader: null,
             firstFooter: null,
         }, options.headerFooter);
+      */
         // this.dataValidations = new DataValidations();
         // for freezepanes, split, zoom, gridlines, etc
         this.views = options.views || [];
@@ -86,11 +88,11 @@ class Worksheet {
         // for images, etc
         // this._media = [];
         // worksheet protection
-        this.sheetProtection = null;
+        // this.sheetProtection = null;
         // for tables
         this.tables = {};
-        this.pivotTables = [];
-        this.conditionalFormattings = [];
+        // this.pivotTables = [];
+        // this.conditionalFormattings = [];
     }
     get name() {
         return this._name;
@@ -656,13 +658,13 @@ class Worksheet {
     // }
     // =========================================================================
     // Worksheet Protection
-  protect(options) {
-    if (options) Object.assign(this.sheetProtection, options)
-    else this.sheetProtection = {sheet:true}
-  }
-  unprotect() {
-    this.sheetProtection = null;
-  }
+  // protect(options) {
+  //   if (options) Object.assign(this.sheetProtection, options)
+  //   else this.sheetProtection = {sheet:true}
+  // }
+  // unprotect() {
+  //   this.sheetProtection = null;
+  // }
     // =========================================================================
     // Tables
     addTable(model) {
@@ -692,20 +694,20 @@ class Worksheet {
 //     }
     // ===========================================================================
     // Conditional Formatting
-    addConditionalFormatting(cf) {
-        this.conditionalFormattings.push(cf);
-    }
-    removeConditionalFormatting(filter) {
-        if (typeof filter === 'number') {
-            this.conditionalFormattings.splice(filter, 1);
-        }
-        else if (filter instanceof Function) {
-            this.conditionalFormattings = this.conditionalFormattings.filter(filter);
-        }
-        else {
-            this.conditionalFormattings = [];
-        }
-    }
+    // addConditionalFormatting(cf) {
+    //     this.conditionalFormattings.push(cf);
+    // }
+    // removeConditionalFormatting(filter) {
+    //     if (typeof filter === 'number') {
+    //         this.conditionalFormattings.splice(filter, 1);
+    //     }
+    //     else if (filter instanceof Function) {
+    //         this.conditionalFormattings = this.conditionalFormattings.filter(filter);
+    //     }
+    //     else {
+    //         this.conditionalFormattings = [];
+    //     }
+    // }
     // ===========================================================================
     // Deprecated
     get tabColor() {
@@ -727,16 +729,16 @@ class Worksheet {
             // dataValidations: this.dataValidations.model,
             properties: this.properties,
             state: this.state,
-            pageSetup: this.pageSetup,
-            headerFooter: this.headerFooter,
+            // pageSetup: this.pageSetup,
+            // headerFooter: this.headerFooter,
             rowBreaks: this.rowBreaks,
             views: this.views,
             autoFilter: this.autoFilter,
             // media: this._media.map(medium => medium.model),
-            sheetProtection: this.sheetProtection,
+            // sheetProtection: this.sheetProtection,
             tables: Object.values(this.tables).map(table => table.model),
             // pivotTables: this.pivotTables,
-            conditionalFormattings: this.conditionalFormattings,
+            // conditionalFormattings: this.conditionalFormattings,
         };
         // =================================================
         // columns
@@ -782,12 +784,12 @@ class Worksheet {
         this._parseMergeCells(value);
         // this.dataValidations = new DataValidations(value.dataValidations);
         this.properties = value.properties;
-        this.pageSetup = value.pageSetup;
-        this.headerFooter = value.headerFooter;
+        // this.pageSetup = value.pageSetup;
+        // this.headerFooter = value.headerFooter;
         this.views = value.views;
         this.autoFilter = value.autoFilter;
         // this._media = value.media.map(medium => new Image(this, medium));
-        this.sheetProtection = value.sheetProtection;
+        // this.sheetProtection = value.sheetProtection;
         this.tables = value.tables.reduce((tables, table) => {
             const t = new Table();
             t.model = table;
@@ -795,7 +797,7 @@ class Worksheet {
             return tables;
         }, {});
         // this.pivotTables = value.pivotTables;
-        this.conditionalFormattings = value.conditionalFormattings;
+        // this.conditionalFormattings = value.conditionalFormattings;
     }
 }
 export default Worksheet;

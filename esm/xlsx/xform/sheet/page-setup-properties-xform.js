@@ -1,29 +1,30 @@
-import BaseXform from "../base-xform.js";
+import BaseXform from "../base-xform.js"
 class PageSetupPropertiesXform extends BaseXform {
-    get tag() {
-        return 'pageSetUpPr';
+  get tag() {
+    return 'pageSetUpPr'
+  }
+  /** @param {XmlStream} xmlStream */
+  render(xmlStream, model) {
+    if (model && model.fitToPage) {
+      xmlStream.lN(this.tag, {
+        fitToPage: model.fitToPage ? '1' : undefined,
+      })
+      return true
     }
-    render(xmlStream, model) {
-        if (model && model.fitToPage) {
-            xmlStream.leafNode(this.tag, {
-                fitToPage: model.fitToPage ? '1' : undefined,
-            });
-            return true;
-        }
-        return false;
+    return false
+  }
+  parseOpen(node) {
+    if (node.name === this.tag) {
+      this.model = {
+        fitToPage: node.atts.fitToPage === '1',
+      }
+      return true
     }
-    parseOpen(node) {
-        if (node.name === this.tag) {
-            this.model = {
-                fitToPage: node.attributes.fitToPage === '1',
-            };
-            return true;
-        }
-        return false;
-    }
-    parseText() { }
-    parseClose() {
-        return false;
-    }
+    return false
+  }
+  parseText() { }
+  parseClose() {
+    return false
+  }
 }
-export default PageSetupPropertiesXform;
+export default PageSetupPropertiesXform

@@ -1,5 +1,6 @@
 // StringBuf - a way to keep string memory operations to a minimum
 // while building the strings for the xml files
+import Buffer from './buffer.js'
 class StringBuf {
     constructor(options) {
         this._buf = Buffer.alloc((options && options.size) || 16384);

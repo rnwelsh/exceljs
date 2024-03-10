@@ -1,5 +1,5 @@
 import Worksheet from "./worksheet.js";
-import DefinedNames from "./defined-names.js";
+// import DefinedNames from "./defined-names.js";
 import XLSX from "../xlsx/xlsx.js";
 'use strict';
 // const CSV = require('../csv/csv');
@@ -25,7 +25,7 @@ export default class Workbook {
         this.views = [];
         // this.media = [];
         // this.pivotTables = [];
-        this._definedNames = new DefinedNames();
+        // this._definedNames = new DefinedNames();
     }
     get xlsx() {
         if (!this._xlsx)
@@ -112,9 +112,9 @@ export default class Workbook {
             iteratee(sheet, sheet.id);
         });
     }
-    get definedNames() {
-        return this._definedNames;
-    }
+    // get definedNames() {
+    //     return this._definedNames;
+    // }
     clearThemes() {
         // Note: themes are not an exposed feature, meddle at your peril!
         this._themes = undefined;
@@ -138,7 +138,7 @@ export default class Workbook {
             properties: this.properties,
             worksheets: this.worksheets.map(worksheet => worksheet.model),
             sheets: this.worksheets.map(ws => ws.model).filter(Boolean),
-            definedNames: this._definedNames.model,
+            // definedNames: this._definedNames.model,
             views: this.views,
             company: this.company,
             manager: this.manager,
@@ -187,7 +187,7 @@ export default class Workbook {
             }));
             worksheet.model = worksheetModel;
         });
-        this._definedNames.model = value.definedNames;
+        // this._definedNames.model = value.definedNames;
         this.views = value.views;
         this._themes = value.themes;
         // this.media = value.media || [];
